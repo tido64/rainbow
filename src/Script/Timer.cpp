@@ -16,23 +16,23 @@ void Timer::dispose(const Passkey<TimerManager>&)
 
 void Timer::update(uint64_t dt, const Passkey<TimerManager>&)
 {
-    if (!is_active())
+    if (!is_active()) {
         return;
+    }
 
     elapsed_ += dt;
     const int ticks = elapsed_ / interval_;
-    for (int i = 0; i < ticks; ++i)
-    {
+    for (int i = 0; i < ticks; ++i) {
         tick_();
-        if (repeat_count_ == 0)
-        {
+        if (repeat_count_ == 0) {
             pause();
             elapsed_ = 0;
             return;
         }
 
-        if (repeat_count_ > 0)
+        if (repeat_count_ > 0) {
             --repeat_count_;
+        }
     }
 
     elapsed_ -= ticks * interval_;

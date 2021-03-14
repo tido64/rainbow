@@ -10,8 +10,7 @@
 namespace rainbow
 {
     /// <summary>Structure for storing a colour (RGBA).</summary>
-    struct Color
-    {
+    struct Color {
         uint8_t r = 0xff;  // NOLINT
         uint8_t g = 0xff;  // NOLINT
         uint8_t b = 0xff;  // NOLINT

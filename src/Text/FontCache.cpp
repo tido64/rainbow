@@ -34,8 +34,7 @@ namespace
               Color* dst,
               const Vec2i& dst_sz)
     {
-        for (uint32_t row = 0; row < src_rect.h; ++row)
-        {
+        for (uint32_t row = 0; row < src_rect.h; ++row) {
             auto out = dst + ((src_rect.y + row) * dst_sz.x + src_rect.x);
             const auto begin = src + src_rect.w * row;
             std::transform(begin, begin + src_rect.w, out, [](uint8_t alpha) {
@@ -79,8 +78,7 @@ FontCache::~FontCache()
 auto FontCache::get(std::string_view font_name) -> FT_Face
 {
     auto search = font_cache_.find(font_name);
-    if (search == font_cache_.end())
-    {
+    if (search == font_cache_.end()) {
         auto data = font_name.empty()
                         ? text::monospace_font()
                         : File::read(font_name.data(), FileType::Asset);
@@ -111,8 +109,7 @@ auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
 {
     const Index cache_index{face, font_size, glyph_index};
     auto search = glyph_cache_.find(cache_index);
-    if (search == glyph_cache_.end())
-    {
+    if (search == glyph_cache_.end()) {
         FT_Set_Char_Size(face, 0, font_size * kPixelFormat, 0, kDPI);
         FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER);
         FT_GlyphSlot slot = face->glyph;
@@ -175,8 +172,7 @@ auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
 
 void FontCache::update(TextureProvider& texture_provider)
 {
-    if (state_ != State::Ready)
-    {
+    if (state_ != State::Ready) {
         const auto image = Image{
             Image::Format::RGBA,
             narrow_cast<uint32_t>(kTextureSize),

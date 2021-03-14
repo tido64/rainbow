@@ -27,15 +27,13 @@ namespace rainbow
 {
     constexpr size_t kInvalidFileSize = std::numeric_limits<size_t>::max();
 
-    enum class FileType
-    {
+    enum class FileType {
         Asset,
         UserAsset,
         UserFile,
     };
 
-    enum class SeekOrigin
-    {
+    enum class SeekOrigin {
         Set,
         Current,
         End,
@@ -45,8 +43,7 @@ namespace rainbow
     {
         constexpr auto seek_origin(int origin)
         {
-            switch (origin)
-            {
+            switch (origin) {
                 case SEEK_CUR:
                     return SeekOrigin::Current;
                 case SEEK_END:
@@ -58,8 +55,7 @@ namespace rainbow
 
         constexpr auto seek_origin(SeekOrigin origin)
         {
-            switch (origin)
-            {
+            switch (origin) {
                 case SeekOrigin::Set:
                     return SEEK_SET;
                 case SeekOrigin::Current:
@@ -84,8 +80,7 @@ namespace rainbow
         static auto read(czstring path, FileType file_type) -> Data
         {
             const auto& file = open(path, file_type);
-            if (!file)
-            {
+            if (!file) {
                 LOGW("No such file: %s", path);
                 return {};
             }
@@ -110,12 +105,9 @@ namespace rainbow
         /// <summary>Returns the file size; -1 on error.</summary>
         [[nodiscard]] auto size() const -> size_t
         {
-            if CONSTEXPR (T::is_platform_handle())
-            {
+            if CONSTEXPR (T::is_platform_handle()) {
                 return T::size();
-            }
-            else
-            {
+            } else {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
                 return PHYSFS_fileLength(T::handle());
@@ -131,12 +123,9 @@ namespace rainbow
         /// <returns>Number of bytes read.</returns>
         auto read(void* dst, size_t size) const -> size_t
         {
-            if CONSTEXPR (T::is_platform_handle())
-            {
+            if CONSTEXPR (T::is_platform_handle()) {
                 return T::read(dst, size);
-            }
-            else
-            {
+            } else {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
                 return PHYSFS_readBytes(T::handle(), dst, size);
@@ -169,12 +158,9 @@ namespace rainbow
         /// <returns><c>true</c> upon success; <c>false</c> otherwise.</returns>
         auto seek(int64_t offset, SeekOrigin seek_origin) const -> bool
         {
-            if CONSTEXPR (T::is_platform_handle())
-            {
+            if CONSTEXPR (T::is_platform_handle()) {
                 return T::seek(offset, seek_origin);
-            }
-            else
-            {
+            } else {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
                 const auto pos = absolute_position(offset, seek_origin);
@@ -185,12 +171,9 @@ namespace rainbow
         /// <summary>Returns the current file position indicator.</summary>
         [[nodiscard]] auto tell() const -> size_t
         {
-            if CONSTEXPR (T::is_platform_handle())
-            {
+            if CONSTEXPR (T::is_platform_handle()) {
                 return T::tell();
-            }
-            else
-            {
+            } else {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
                 return PHYSFS_tell(T::handle());
@@ -207,8 +190,7 @@ namespace rainbow
         static auto open(czstring path, FileType file_type) -> U
         {
             U file;
-            if (!is_empty(path))
-            {
+            if (!is_empty(path)) {
                 const auto real_path = T::resolve_path(path, file_type);
                 if (!T::open(real_path.c_str(), file_type, std::ref(file)))
                     file.set_handle(PHYSFS_openRead(real_path.c_str()));
@@ -238,8 +220,7 @@ namespace rainbow
                                              SeekOrigin seek_origin) const
             -> size_t
         {
-            switch (seek_origin)
-            {
+            switch (seek_origin) {
                 case SeekOrigin::Set:
                     return offset;
                 case SeekOrigin::Current:
@@ -261,8 +242,7 @@ namespace rainbow
         static auto open(czstring path) -> TWriteableFile
         {
             TWriteableFile file;
-            if (!is_empty(path))
-            {
+            if (!is_empty(path)) {
                 constexpr auto file_type = FileType::UserFile;
                 const auto real_path = T::resolve_path(path, file_type);
                 if (!T::open(real_path.c_str(), file_type, std::ref(file)))
@@ -293,12 +273,9 @@ namespace rainbow
         {
             R_ASSERT(size > 0, "No data to write");
 
-            if CONSTEXPR (T::is_platform_handle())
-            {
+            if CONSTEXPR (T::is_platform_handle()) {
                 return T::write(buffer, size);
-            }
-            else
-            {
+            } else {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
                 return PHYSFS_writeBytes(T::handle(), buffer, size);

@@ -25,8 +25,7 @@ namespace
                   duk_errcode_t err_code,
                   Args&&... args)
     {
-        if (condition)
-        {
+        if (condition) {
 #ifdef __GNUC__
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -80,16 +79,19 @@ auto rainbow::duk::module::resolve(duk_context* ctx) -> duk_ret_t
         ctx, is_empty(requested_id), DUK_RET_TYPE_ERROR, "invalid module name");
 
     Path requested(requested_id);
-    if (requested.extension() != ".js")
+    if (requested.extension() != ".js") {
         requested += ".js";
+    }
 
-    if (!is_relative(requested))
+    if (!is_relative(requested)) {
         return push(ctx, std::move(requested));
+    }
 
     duk_size_t parent_id_length;
     auto parent_id = duk_get_lstring(ctx, 1, &parent_id_length);
-    if (parent_id_length == 0)
+    if (parent_id_length == 0) {
         return push(ctx, std::move(requested));
+    }
 
     Path parent(parent_id);
     return push(ctx, parent.parent_path() / requested);

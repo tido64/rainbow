@@ -22,8 +22,7 @@ namespace
         {
             using rainbow::ErrorCode;
 
-            switch (static_cast<ErrorCode>(condition))
-            {
+            switch (static_cast<ErrorCode>(condition)) {
                 case ErrorCode::Success:
                     return {};
                 case ErrorCode::AudioInitializationFailed:

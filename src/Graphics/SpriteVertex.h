@@ -14,8 +14,7 @@ namespace rainbow
     ///   A typical sprite vertex contains x- and y-coordinates for position and
     ///   texture.
     /// </summary>
-    struct SpriteVertex
-    {
+    struct SpriteVertex {
         Color color;     ///< Texture colour; white by default.
         Vec2f texcoord;  ///< Texture coordinates.
         Vec2f position;  ///< Position of vertex.

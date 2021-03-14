@@ -83,9 +83,8 @@ namespace rainbow
     class Sprite : private NonCopyable<Sprite>
     {
     public:
-        enum
-        {
-            kNoId
+        enum {
+            kNoId,
         };
 
         Sprite() = default;

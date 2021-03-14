@@ -74,8 +74,7 @@ auto Typesetter::draw_text(std::string_view text,
     std::vector<SpriteVertex> vertices;
     vertices.reserve(glyph_positions.size() * 4);
     auto font_face = font_cache_.get(attributes.font_face);
-    for (auto&& glyph : glyph_positions)
-    {
+    for (auto&& glyph : glyph_positions) {
         auto vx = font_cache_.get_glyph(
             font_face, attributes.font_size, glyph.glyph_index);
         auto p = glyph.position + position;
@@ -106,8 +105,7 @@ auto Typesetter::layout_text(std::string_view text,
     int line_count = 0;
     int start = 0;
     const auto length = narrow_cast<int>(text.length());
-    while (start < length)
-    {
+    while (start < length) {
         hb_buffer_reset(buffer_);
 
         const int line_length = suggest_line_break(text, start);
@@ -120,16 +118,14 @@ auto Typesetter::layout_text(std::string_view text,
         auto positions = hb_buffer_get_glyph_positions(buffer_, &count);
 
         Vec2f origin{0, -line_height * narrow_cast<float>(line_count)};
-        for (unsigned int i = 0; i < count; ++i)
-        {
+        for (unsigned int i = 0; i < count; ++i) {
             const auto& p = positions[i];
             result.push_back(
                 {infos[i].codepoint, origin + to_vec2(p.x_offset, p.y_offset)});
             origin += to_vec2(p.x_advance, p.y_advance);
         }
 
-        switch (attributes.text_alignment)
-        {
+        switch (attributes.text_alignment) {
             case TextAlignment::Left:
                 break;
             case TextAlignment::Right:
@@ -152,8 +148,7 @@ auto Typesetter::layout_text(std::string_view text,
 
     hb_font_destroy(font);
 
-    if (size != nullptr)
-    {
+    if (size != nullptr) {
         size->x = width;
         size->y = line_height * narrow_cast<float>(line_count);
     }

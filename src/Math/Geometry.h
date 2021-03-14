@@ -30,8 +30,7 @@ namespace rainbow
         Vec2f r0 = Vec2f::Left;
         const Vec2f start = center + radius * r0;
         Vec2f v0 = start;
-        for (int i = 1; i < num_segments; ++i)
-        {
+        for (int i = 1; i < num_segments; ++i) {
             const Vec2f r1(cos_inc * r0.x - sin_inc * r0.y,
                            sin_inc * r0.x + cos_inc * r0.y);
             const Vec2f v1 = center + radius * r1;
@@ -42,14 +41,12 @@ namespace rainbow
         f(v0, start);
     }
 
-    struct Quad
-    {
+    struct Quad {
         // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
         Vec2f v0, v1, v2, v3;
     };
 
-    struct Rect
-    {
+    struct Rect {
         float left = 0.0F;    // NOLINT
         float bottom = 0.0F;  // NOLINT
         float width = 0.0F;   // NOLINT

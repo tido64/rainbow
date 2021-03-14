@@ -101,8 +101,9 @@ auto Sprite::flip() -> Sprite&
 
 auto Sprite::hide() -> Sprite&
 {
-    if (is_hidden())
+    if (is_hidden()) {
         return *this;
+    }
 
     state_ |= kIsHidden | kStaleMask;
     return *this;
@@ -151,8 +152,7 @@ auto Sprite::pivot(Vec2f pivot) -> Sprite&
              "Invalid pivot point");
 
     Vec2f diff = pivot - pivot_;
-    if (!diff.is_zero())
-    {
+    if (!diff.is_zero()) {
         diff.x *= width_ * scale_.x;
         diff.y *= height_ * scale_.y;
         center_ += diff;
@@ -188,8 +188,9 @@ auto Sprite::scale(Vec2f f) -> Sprite&
 
 auto Sprite::show() -> Sprite&
 {
-    if (!is_hidden())
+    if (!is_hidden()) {
         return *this;
+    }
 
     state_ &= ~kIsHidden;
     state_ |= kStaleMask;
@@ -206,11 +207,11 @@ auto Sprite::texture(const rainbow::Rect& area) -> Sprite&
 auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
                     const TextureData& texture) -> bool
 {
-    if ((state_ & kStaleMask) == 0)
+    if ((state_ & kStaleMask) == 0) {
         return false;
+    }
 
-    if (is_hidden())
-    {
+    if (is_hidden()) {
         vertex_array[0].position = Vec2f::Zero;
         vertex_array[1].position = Vec2f::Zero;
         vertex_array[2].position = Vec2f::Zero;
@@ -219,15 +220,13 @@ auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
         return true;
     }
 
-    if ((state_ & kStaleBuffer) != 0)
-    {
-        if ((state_ & kStalePosition) != 0)
+    if ((state_ & kStaleBuffer) != 0) {
+        if ((state_ & kStalePosition) != 0) {
             center_ = position_;
+        }
 
         rainbow::transform(*this, vertex_array);
-    }
-    else if ((state_ & kStalePosition) != 0)
-    {
+    } else if ((state_ & kStalePosition) != 0) {
         position_ -= center_;
         vertex_array[0].position += position_;
         vertex_array[1].position += position_;
@@ -237,12 +236,10 @@ auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
         position_ = center_;
     }
 
-    if ((state_ & kStaleTexture) != 0)
-    {
+    if ((state_ & kStaleTexture) != 0) {
         auto coords = normalized_coordinates(texture, texture_area_);
         const uint32_t f = flip_index(state_);
-        for (uint32_t i = 0; i < 4; ++i)
-        {
+        for (uint32_t i = 0; i < 4; ++i) {
             auto& vx = vertex_array[kFlipTable[f + i]];
             vx.color = color_;
             vx.texcoord = coords[i];
@@ -256,15 +253,17 @@ auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
 auto Sprite::update(ArraySpan<Vec2f> normal_array, const TextureData& normal)
     -> bool
 {
-    if ((state_ & kStaleNormalMap) == 0)
+    if ((state_ & kStaleNormalMap) == 0) {
         return false;
+    }
 
     state_ ^= kStaleNormalMap;
 
     auto coords = normalized_coordinates(normal, normal_map_);
     const uint32_t f = flip_index(state_);
-    for (uint32_t i = 0; i < 4; ++i)
+    for (uint32_t i = 0; i < 4; ++i) {
         normal_array[kFlipTable[f + i]] = coords[i];
+    }
     return true;
 }
 

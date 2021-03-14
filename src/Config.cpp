@@ -25,8 +25,7 @@ namespace
     constexpr char kConfigINI[] = "config.ini";
     constexpr int kMaxMSAA = 16;
 
-    struct Keys
-    {
+    struct Keys {
         uint64_t resolution_width;
         uint64_t resolution_height;
         uint64_t msaa;
@@ -38,8 +37,9 @@ namespace
     template <typename F>
     constexpr void with_bool(std::string_view value, F&& f)
     {
-        if (value.empty())
+        if (value.empty()) {
             return;
+        }
 
         f(value != "0"sv && value != "false"sv);
     }
@@ -49,15 +49,15 @@ rainbow::Config::Config()
     : width_(0), height_(0), msaa_(0), hidpi_(false), suspend_(true),
       accelerometer_(false)
 {
-    if (!filesystem::exists(kConfigINI))
-    {
+    if (!filesystem::exists(kConfigINI)) {
         LOGI("No config file was found");
         return;
     }
 
     const Data& config = File::read(kConfigINI, FileType::Asset);
-    if (!config)
+    if (!config) {
         return;
+    }
 
     absl::Hash<std::string_view> hash;
     const Keys keys{
@@ -75,8 +75,7 @@ rainbow::Config::Config()
                              std::string_view section,
                              std::string_view key,
                              std::string_view value) {
-            if (state == panini::State::Error)
-            {
+            if (state == panini::State::Error) {
                 LOGE(  //
                     "Error parsing %s:%s: %s",
                     kConfigINI,
@@ -85,21 +84,23 @@ rainbow::Config::Config()
                 return;
             }
 
-            if (section != "core"sv)
+            if (section != "core"sv) {
                 return;
+            }
 
             const auto hashed_key = hash(key);
-            if (hashed_key == keys.resolution_width)
+            if (hashed_key == keys.resolution_width) {
                 width_ = atoi(value.data());
-            else if (hashed_key == keys.resolution_height)
+            } else if (hashed_key == keys.resolution_height) {
                 height_ = atoi(value.data());
-            else if (hashed_key == keys.msaa)
+            } else if (hashed_key == keys.msaa) {
                 msaa_ = floor_pow2(std::clamp(atoi(value.data()), 0, kMaxMSAA));
-            else if (hashed_key == keys.allow_hidpi)
+            } else if (hashed_key == keys.allow_hidpi) {
                 with_bool(value, [this](bool v) { hidpi_ = v; });
-            else if (hashed_key == keys.suspend_on_focus_lost)
+            } else if (hashed_key == keys.suspend_on_focus_lost) {
                 with_bool(value, [this](bool v) { suspend_ = v; });
-            else if (hashed_key == keys.accelerometer)
+            } else if (hashed_key == keys.accelerometer) {
                 with_bool(value, [this](bool v) { accelerometer_ = v; });
+            }
         });
 }

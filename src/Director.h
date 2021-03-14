@@ -21,7 +21,7 @@ namespace rainbow
     /// <summary>
     ///   Simple game loop. Must be created after having set up a video context.
     /// </summary>
-    class Director final IF_DEBUG_ELSE(: public Global<Director>,)
+    class Director final IF_DEBUG_ELSE( : public Global<Director>, )
     {
     public:
         Director();

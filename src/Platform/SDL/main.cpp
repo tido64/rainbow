@@ -3,21 +3,21 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef NDEBUG
-#   include <absl/debugging/failure_signal_handler.h>
-#   include <absl/debugging/symbolize.h>
+#    include <absl/debugging/failure_signal_handler.h>
+#    include <absl/debugging/symbolize.h>
 #endif
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_JS)
-#   pragma clang diagnostic ignored "-Wunused-function"
-#   include <emscripten.h>
+#    pragma clang diagnostic ignored "-Wunused-function"
+#    include <emscripten.h>
 #elif defined(RAINBOW_OS_WINDOWS)
-#   if defined(_MSC_VER) && defined(NDEBUG)
-        // TODO: https://gitlab.kitware.com/cmake/cmake/issues/12566
-#       pragma comment(linker, "/SUBSYSTEM:WINDOWS")
-#   endif
-#   include "Graphics/OpenGL.h"
-#   include "Platform/Windows/Console.h"
+#    if defined(_MSC_VER) && defined(NDEBUG)
+// TODO: https://gitlab.kitware.com/cmake/cmake/issues/12566
+#        pragma comment(linker, "/SUBSYSTEM:WINDOWS")
+#    endif
+#    include "Graphics/OpenGL.h"
+#    include "Platform/Windows/Console.h"
 #endif
 
 #include "Common/Functional.h"
@@ -27,7 +27,7 @@
 #include "Platform/SDL/Context.h"
 #include "Platform/SDL/RainbowController.h"
 #ifdef RAINBOW_TEST
-#   include "Tests/Tests.h"
+#    include "Tests/Tests.h"
 #endif
 
 using rainbow::Bundle;
@@ -58,22 +58,22 @@ auto main() -> int
 
 auto main(int argc, char* argv[]) -> int
 {
-#ifndef NDEBUG
+#    ifndef NDEBUG
     absl::InitializeSymbolizer(argv[0]);
     absl::InstallFailureSignalHandler(absl::FailureSignalHandlerOptions{});
-#endif
+#    endif
 
     const Bundle bundle({argv, static_cast<size_t>(argc)});
     rainbow::filesystem::initialize(bundle, argv[0], true);
 
-#ifdef RAINBOW_TEST
+#    ifdef RAINBOW_TEST
     if (rainbow::should_run_tests(std::ref(argc), std::ref(argv)))
         return rainbow::run_tests(argc, argv);
-#endif
+#    endif
 
-#ifdef RAINBOW_OS_WINDOWS
+#    ifdef RAINBOW_OS_WINDOWS
     rainbow::windows::Console console;
-#endif
+#    endif
 
     const rainbow::Config config;
     SDLContext context(config);
@@ -81,7 +81,8 @@ auto main(int argc, char* argv[]) -> int
         return 1;
 
     RainbowController controller(context, config);
-    while (controller.run()) {}
+    while (controller.run()) {
+    }
     return controller.error().value();
 }
 

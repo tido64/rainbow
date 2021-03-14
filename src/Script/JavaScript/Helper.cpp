@@ -16,8 +16,7 @@ using rainbow::graphics::Texture;
 
 #define PUSH_OBJECT() const auto obj_idx = duk_push_object(ctx)
 #define PUT_PROP(obj, prop)                                                    \
-    do                                                                         \
-    {                                                                          \
+    do {                                                                       \
         duk::push(ctx, (obj).prop);                                            \
         duk::put_prop_literal(ctx, obj_idx, #prop);                            \
     } while (false)
@@ -55,14 +54,11 @@ namespace rainbow::duk
 
 void rainbow::duk::dump_context(duk_context* ctx)
 {
-    if (duk_is_error(ctx, -1))
-    {
+    if (duk_is_error(ctx, -1)) {
         duk::get_prop_literal(ctx, -1, "stack");
         LOGF("JavaScript: %s", duk_safe_to_string(ctx, -1));
         duk_pop(ctx);
-    }
-    else
-    {
+    } else {
         LOGF("JavaScript: %s", duk_safe_to_string(ctx, -1));
     }
 
@@ -75,8 +71,7 @@ template <>
 auto rainbow::duk::get<Animation::Callback>(duk_context* ctx, duk_idx_t idx)
     -> Animation::Callback
 {
-    if (!duk_is_object(ctx, idx))
-    {
+    if (!duk_is_object(ctx, idx)) {
         duk_push_undefined(ctx);
         duk::put_prop_literal(ctx, -2, DUKR_HIDDEN_SYMBOL_CALLBACK);
         return {};
@@ -141,8 +136,7 @@ auto rainbow::duk::get<Animation::Frames>(duk_context* ctx, duk_idx_t idx)
     auto size = duk_get_length(ctx, idx);
     auto frames = std::make_unique<Rect[]>(size + 1);
 
-    for (duk_uarridx_t i = 0; i < size; ++i)
-    {
+    for (duk_uarridx_t i = 0; i < size; ++i) {
         duk_get_prop_index(ctx, idx, i);
         frames[i] = get<Rect>(ctx, duk_get_top_index(ctx));
         duk_pop(ctx);

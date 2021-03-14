@@ -20,8 +20,7 @@ namespace rainbow
         {
             node.pop();
             node.prev_ = static_cast<T*>(this);
-            if (next_ != nullptr)
-            {
+            if (next_ != nullptr) {
                 next_->prev_ = &node;
                 node.next_ = next_;
             }
@@ -33,13 +32,10 @@ namespace rainbow
             if (prev_ != nullptr)
                 prev_->next_ = next_;
 
-            if (next_ != nullptr)
-            {
+            if (next_ != nullptr) {
                 next_->prev_ = prev_;
                 next_ = nullptr;
-            }
-            else if (prev_ != nullptr)
-            {
+            } else if (prev_ != nullptr) {
                 prev_->on_end_link_changed(*prev_);
             }
 
@@ -49,8 +45,7 @@ namespace rainbow
         template <typename F>
         friend auto for_each(T* node, F&& f) -> bool
         {
-            while (node != nullptr)
-            {
+            while (node != nullptr) {
                 if (f(*node))
                     return true;
 

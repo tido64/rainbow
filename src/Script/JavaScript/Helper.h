@@ -45,8 +45,7 @@ namespace rainbow::graphics
 
 namespace rainbow::duk
 {
-    enum class Allocation
-    {
+    enum class Allocation {
         NoHeap,
         HeapAllocated,
     };
@@ -79,30 +78,20 @@ namespace rainbow::duk
     template <typename T>
     constexpr auto buffer_object_type() -> duk_uint_t
     {
-        if constexpr (std::is_same_v<T, double>)
-        {
+        if constexpr (std::is_same_v<T, double>) {
             return DUK_BUFOBJ_FLOAT64ARRAY;
-        }
-        else if constexpr (std::is_same_v<T, float>)
-        {
+        } else if constexpr (std::is_same_v<T, float>) {
             return DUK_BUFOBJ_FLOAT32ARRAY;
-        }
-        else if constexpr (std::is_integral_v<T> && sizeof(T) == sizeof(int8_t))
-        {
+        } else if constexpr (std::is_integral_v<T> &&
+                             sizeof(T) == sizeof(int8_t)) {
             return DUK_BUFOBJ_INT8ARRAY;
-        }
-        else if constexpr (std::is_integral_v<T> &&
-                           sizeof(T) == sizeof(int16_t))
-        {
+        } else if constexpr (std::is_integral_v<T> &&
+                             sizeof(T) == sizeof(int16_t)) {
             return DUK_BUFOBJ_INT16ARRAY;
-        }
-        else if constexpr (std::is_integral_v<T> &&
-                           sizeof(T) == sizeof(int32_t))
-        {
+        } else if constexpr (std::is_integral_v<T> &&
+                             sizeof(T) == sizeof(int32_t)) {
             return DUK_BUFOBJ_INT32ARRAY;
-        }
-        else
-        {
+        } else {
             return DUK_BUFOBJ_DATAVIEW;
         }
     }
@@ -289,8 +278,7 @@ namespace rainbow::duk
 #else
         const bool success =
             duk_pcall(ctx, sizeof...(args)) == DUK_EXEC_SUCCESS;
-        if (!success)
-        {
+        if (!success) {
             LOGF("JavaScript: An error occurred while calling '%s'", func);
             dump_context(ctx);
         }
@@ -319,8 +307,7 @@ namespace rainbow::duk
     {
         ScopedStack stack{ctx};
 
-        if constexpr (PerformTypeCheck)
-        {
+        if constexpr (PerformTypeCheck) {
             duk_require_object(ctx, idx);
             duk::get_prop_literal(ctx, idx, DUKR_HIDDEN_SYMBOL_TYPE);
             const auto type = duk_require_pointer(ctx, -1);
@@ -360,14 +347,11 @@ namespace rainbow::duk
                 duk_require_constructor_call(ctx);
 
                 void* ptr = duk_alloc(ctx, sizeof(T));
-                if constexpr (std::is_same_v<T, graphics::Texture>)
-                {
+                if constexpr (std::is_same_v<T, graphics::Texture>) {
                     auto path = duk::get<czstring>(ctx, 0);
                     auto& texture = *static_cast<graphics::Texture*>(ptr);
                     get_texture(ctx, path, texture);
-                }
-                else
-                {
+                } else {
                     std::tuple<Args...> args = duk::get_args<Args...>(ctx);
                     detail::make_from_tuple_in<T>(
                         ptr,
@@ -423,8 +407,7 @@ namespace rainbow::duk
 
         put_props(ctx);
 
-        if constexpr (Alloc == Allocation::HeapAllocated)
-        {
+        if constexpr (Alloc == Allocation::HeapAllocated) {
             duk_push_c_function(
                 ctx,
                 [](duk_context* ctx) -> duk_ret_t {

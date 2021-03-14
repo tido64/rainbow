@@ -16,8 +16,7 @@ Diffuse::Diffuse(ShaderManager& shader_manager, bool normal)
     : shader_manager_(shader_manager), cutoff_(0), radius_(0), position_(0),
       program_(ShaderManager::kInvalidProgram)
 {
-    if (normal)
-    {
+    if (normal) {
         Shader::Params shaders[]{
             gl::NormalMapped_vert(), gl::DiffuseLightNormal_frag()};
         const Shader::AttributeParams attributes[]{
@@ -27,16 +26,15 @@ Diffuse::Diffuse(ShaderManager& shader_manager, bool normal)
             {Shader::kAttributeNormal, "normal"},
             {Shader::kAttributeNone, nullptr}};
         program_ = shader_manager_.compile(shaders, attributes);
-    }
-    else
-    {
+    } else {
         Shader::Params shaders[]{
             {Shader::kTypeVertex, 0, nullptr, nullptr},  // kFixed2Dv
             gl::DiffuseLight2D_frag()};
         program_ = shader_manager_.compile(shaders, nullptr);
     }
-    if (program_ == ShaderManager::kInvalidProgram)
+    if (program_ == ShaderManager::kInvalidProgram) {
         return;
+    }
 
     auto context = shader_manager_.use_scoped(program_);
     Shader::Details& details = shader_manager_.get_program(program_);
@@ -44,8 +42,7 @@ Diffuse::Diffuse(ShaderManager& shader_manager, bool normal)
     radius_ = glGetUniformLocation(details.program, "radius");
     position_ = glGetUniformLocation(details.program, "light");
     glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
-    if (normal)
-    {
+    if (normal) {
         glUniform1i(glGetUniformLocation(details.program, "normal"), 1);
         details.texture1 = true;
     }

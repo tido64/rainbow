@@ -9,8 +9,7 @@
 
 namespace rainbow::audio
 {
-    struct Sound
-    {
+    struct Sound {
         bool stream = false;
         int format = 0;
         int rate = 0;

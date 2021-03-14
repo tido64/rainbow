@@ -22,13 +22,11 @@ auto rainbow::system_info::locales() -> std::vector<std::string>
 
     wchar_t wname[LOCALE_NAME_MAX_LENGTH];
     const int size = GetUserDefaultLocaleName(wname, LOCALE_NAME_MAX_LENGTH);
-    if (size > 0)
-    {
+    if (size > 0) {
         char name[LOCALE_NAME_MAX_LENGTH];
         if (WideCharToMultiByte(
                 CP_UTF8, 0, wname, -1, name, sizeof(name), nullptr, nullptr) >
-            0)
-        {
+            0) {
             locales[0] = name;
         }
     }

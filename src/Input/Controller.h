@@ -20,8 +20,7 @@ namespace rainbow
 {
     using ControllerID = int32_t;
 
-    enum class ControllerAxis
-    {
+    enum class ControllerAxis {
         Invalid = -1,
         LeftX,
         LeftY,
@@ -32,8 +31,7 @@ namespace rainbow
         Count
     };
 
-    enum class ControllerButton
-    {
+    enum class ControllerButton {
         Invalid = -1,
         A,
         B,
@@ -53,8 +51,7 @@ namespace rainbow
         Count
     };
 
-    struct ControllerAxisMotion
-    {
+    struct ControllerAxisMotion {
         ControllerID id;
         ControllerAxis axis;
         int32_t value;
@@ -74,8 +71,7 @@ namespace rainbow
         }
     };
 
-    struct ControllerButtonEvent
-    {
+    struct ControllerButtonEvent {
         ControllerID id;
         ControllerButton button;
         uint64_t timestamp;

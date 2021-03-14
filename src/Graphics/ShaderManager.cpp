@@ -45,12 +45,12 @@ namespace
     {
         GLint status = GL_FALSE;
         glGetiv(id, pname, &status);
-        if (status == GL_FALSE)
-        {
+        if (status == GL_FALSE) {
             GLint info_len = 0;
             glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
-            if (info_len == 0)
+            if (info_len == 0) {
                 return {};
+            }
 
             std::string info(info_len, '\0');
             glGetInfoLog(id, info_len, nullptr, info.data());
@@ -63,35 +63,27 @@ namespace
     auto compile_shader(const Shader::Params& shader) -> unsigned int
     {
         const GLuint id = glCreateShader(shader.type);
-        if (rainbow::filesystem::is_regular_file(shader.source))
-        {
+        if (rainbow::filesystem::is_regular_file(shader.source)) {
             const Data& glsl = File::read(shader.source, FileType::Asset);
-            if (!glsl)
-            {
+            if (!glsl) {
                 LOGE("Failed to load shader: %s", shader.source);
-                if (shader.fallback == nullptr)
-                {
+                if (shader.fallback == nullptr) {
                     R_ABORT("No fallback was found");
                     return ShaderManager::kInvalidProgram;
                 }
 
                 shader_source(id, shader.fallback);
-            }
-            else
-            {
+            } else {
                 shader_source(id, glsl.as<char*>());
             }
-        }
-        else
-        {
+        } else {
             shader_source(id, shader.fallback);
         }
         glCompileShader(id);
 
         const auto& error =
             verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
-        if (!error.empty())
-        {
+        if (!error.empty()) {
             glDeleteShader(id);
             R_ABORT(
                 "GLSL: Failed to compile %s shader: %s",
@@ -108,16 +100,17 @@ namespace
                       const Shader::AttributeParams* attributes) -> unsigned int
     {
         const GLuint program = glCreateProgram();
-        for (auto&& shader : shaders)
+        for (auto&& shader : shaders) {
             glAttachShader(program, shader.id);
-        for (auto attrib = attributes; attrib->name != nullptr; ++attrib)
+        }
+        for (auto attrib = attributes; attrib->name != nullptr; ++attrib) {
             glBindAttribLocation(program, attrib->index, attrib->name);
+        }
         glLinkProgram(program);
 
         const auto& error = verify(
             program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
-        if (!error.empty())
-        {
+        if (!error.empty()) {
             glDeleteProgram(program);
             R_ABORT("GLSL: Failed to link program: %s", error.c_str());
             UNREACHABLE();
@@ -130,10 +123,12 @@ namespace
 
 ShaderManager::~ShaderManager()
 {
-    for (const auto& details : programs_)
+    for (const auto& details : programs_) {
         glDeleteProgram(details.program);
-    for (const auto shader : shaders_)
+    }
+    for (const auto shader : shaders_) {
         glDeleteShader(shader);
+    }
 }
 
 bool ShaderManager::init()
@@ -151,33 +146,33 @@ auto ShaderManager::compile(ArraySpan<Shader::Params> shaders,
                             const Shader::AttributeParams* attributes)
     -> unsigned int
 {
-    for (auto&& shader : shaders)
-    {
-        if (shader.source == nullptr)
-        {
+    for (auto&& shader : shaders) {
+        if (shader.source == nullptr) {
             shader.id = shaders_[shader.id];
             continue;
         }
 
-        if (shader.id > 0)
+        if (shader.id > 0) {
             continue;
+        }
 
         const unsigned int id = compile_shader(shader);
-        if (id == kInvalidProgram)
+        if (id == kInvalidProgram) {
             return id;
+        }
 
         shaders_.push_back(id);
         shader.id = id;
     }
-    if (attributes == nullptr)
-    {
+    if (attributes == nullptr) {
         attributes = static_cast<const Shader::AttributeParams*>(
             kAttributeDefaultParams);
     }
 
     const unsigned int program = link_program(shaders, attributes);
-    if (program == kInvalidProgram)
+    if (program == kInvalidProgram) {
         return program;
+    }
 
     programs_.emplace_back(
         program, glGetUniformLocation(program, "mvp_matrix"));
@@ -200,20 +195,23 @@ void ShaderManager::update_projection()
     // near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
     // The matrix is stored in column-major order.
     const auto& rect = context_->projection;
+    const float mid_x = -(rect.width + rect.left + rect.left) / rect.width;
+    const float mid_y =
+        -(rect.height + rect.bottom + rect.bottom) / rect.height;
+    // clang-format off
     const float projection[]{
-        2.0F / rect.width, 0.0F, 0.0F, 0.0F,
-        0.0F, 2.0F / rect.height, 0.0F, 0.0F,
-        0.0F, 0.0F, -1.0F, 0.0F,
-        -(rect.width + rect.left + rect.left) / rect.width,
-        -(rect.height + rect.bottom + rect.bottom) / rect.height,
-        0.0F, 1.0F};
+        2.0F / rect.width,                0.0F,  0.0F,  0.0F,
+                     0.0F,  2.0F / rect.height,  0.0F,  0.0F,
+                     0.0F,                0.0F, -1.0F,  0.0F,
+                    mid_x,               mid_y,  0.0F,  1.0F,
+    };
+    // clang-format on
     glUniformMatrix4fv(get_program().mvp_matrix, 1, GL_FALSE, projection);
 }
 
 void ShaderManager::update_viewport()
 {
-    if (current_ == kInvalidProgram)
-    {
+    if (current_ == kInvalidProgram) {
         current_ = kDefaultProgram;
         const Shader::Details& details = get_program();
         glUseProgram(details.program);
@@ -226,15 +224,15 @@ void ShaderManager::update_viewport()
 
 void ShaderManager::use(unsigned int program)
 {
-    if (program != current_)
-    {
+    if (program != current_) {
 #ifndef USE_VERTEX_ARRAY_OBJECT
         const Shader::Details& current = get_program();
 #endif  // !USE_VERTEX_ARRAY_OBJECT
         current_ = program;
 
-        if (current_ == kInvalidProgram)
+        if (current_ == kInvalidProgram) {
             return;
+        }
 
         const Shader::Details& details = get_program();
         glUseProgram(details.program);
@@ -242,8 +240,7 @@ void ShaderManager::use(unsigned int program)
         update_projection();
 
 #ifndef USE_VERTEX_ARRAY_OBJECT
-        if (details.texture0 != current.texture0)
-        {
+        if (details.texture0 != current.texture0) {
             if (!details.texture0)
                 glDisableVertexAttribArray(Shader::kAttributeTexCoord);
             else

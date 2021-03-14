@@ -6,11 +6,11 @@
 
 #ifdef USE_HEIMDALL
 
-#include <algorithm>
+#    include <algorithm>
 
-#include "Heimdall/Overlay.h"
-#include "Input/Input.h"
-#include "Input/Pointer.h"
+#    include "Heimdall/Overlay.h"
+#    include "Input/Input.h"
+#    include "Input/Pointer.h"
 
 using heimdall::OverlayActivator;
 using rainbow::KeyStroke;
@@ -33,12 +33,10 @@ void OverlayActivator::reset()
 
 void OverlayActivator::update(uint64_t dt)
 {
-    if (resistance_ == 0)
-    {
+    if (resistance_ == 0) {
         time_till_activation_ =
             std::max(time_till_activation_ - rainbow::narrow_cast<int>(dt), 0);
-        if (time_till_activation_ == 0)
-        {
+        if (time_till_activation_ == 0) {
             reset();
             overlay_.enable();
         }
@@ -47,8 +45,7 @@ void OverlayActivator::update(uint64_t dt)
 
 auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
 {
-    if (!overlay_.is_enabled() && key.key == VirtualKey::F2)
-    {
+    if (!overlay_.is_enabled() && key.key == VirtualKey::F2) {
 #    ifdef RAINBOW_OS_MACOS
         constexpr auto LeftSuper = VirtualKey::LeftSuper;
         constexpr auto RightSuper = VirtualKey::RightSuper;
@@ -60,8 +57,7 @@ auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
         if ((keyboard_state[to_underlying_type(VirtualKey::LeftAlt)] ||
              keyboard_state[to_underlying_type(VirtualKey::RightAlt)]) &&
             (keyboard_state[to_underlying_type(LeftSuper)] ||
-             keyboard_state[to_underlying_type(RightSuper)]))
-        {
+             keyboard_state[to_underlying_type(RightSuper)])) {
             overlay_.enable();
             return true;
         }
@@ -73,17 +69,18 @@ auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
 auto OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
     -> bool
 {
-    if (overlay_.is_enabled())
+    if (overlay_.is_enabled()) {
         return false;
+    }
 
     int i = 0;
-    switch (resistance_)
-    {
+    switch (resistance_) {
         case 2:
             pointers_[0] = pointers[0].hash;
             --resistance_;
-            if (pointers.size() < 2)
+            if (pointers.size() < 2) {
                 break;
+            }
             i = 1;
             [[fallthrough]];
         case 1:
@@ -108,16 +105,12 @@ auto OverlayActivator::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
     -> bool
 {
     const bool prevent_propagation = is_activated();
-    for (auto&& p : pointers)
-    {
-        if (p.hash == pointers_[0])
-        {
+    for (auto&& p : pointers) {
+        if (p.hash == pointers_[0]) {
             pointers_[0] = pointers_[1];
             pointers_[1] = kNoPointer;
             ++resistance_;
-        }
-        else if (p.hash == pointers_[1])
-        {
+        } else if (p.hash == pointers_[1]) {
             pointers_[1] = kNoPointer;
             ++resistance_;
         }

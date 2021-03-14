@@ -31,8 +31,7 @@ namespace rainbow
     class Data : private NonCopyable<Data>
     {
     public:
-        enum class Ownership
-        {
+        enum class Ownership {
             Owner,
             Reference,
         };

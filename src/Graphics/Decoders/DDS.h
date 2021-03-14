@@ -27,8 +27,7 @@ namespace
     constexpr uint32_t kFourCCDXT3 = rainbow::make_fourcc('D', 'X', 'T', '3');
     constexpr uint32_t kFourCCDXT5 = rainbow::make_fourcc('D', 'X', 'T', '5');
 
-    struct DDSPixelFormat
-    {
+    struct DDSPixelFormat {
         uint32_t dwSize;
         uint32_t dwFlags;
         uint32_t dwFourCC;
@@ -39,8 +38,7 @@ namespace
         uint32_t dwABitMask;
     };
 
-    struct DDSHeader
-    {
+    struct DDSHeader {
         uint32_t dwSize;
         uint32_t dwFlags;
         uint32_t dwHeight;
@@ -57,8 +55,7 @@ namespace
         uint32_t dwReserved2;
     };
 
-    struct DDSFile
-    {
+    struct DDSFile {
         uint32_t dwMagic;
         DDSHeader header;
     };
@@ -84,8 +81,7 @@ namespace dds
 
         Image::Format format;
         uint32_t channels;
-        switch (ddspf.dwFourCC)
-        {
+        switch (ddspf.dwFourCC) {
             case kFourCCDXT1:
                 format = Image::Format::BC1;
                 channels = (ddspf.dwFlags & kDDPFRGBA) == kDDPFRGBA ? 4 : 3;

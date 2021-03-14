@@ -1,7 +1,8 @@
-Checks: '*,-clang-analyzer-alpha.*,-clang-diagnostic-expansion-to-defined,-cppcoreguidelines-pro-bounds-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-fuchsia-*,-google-*,-hicpp-*,-readability-braces-around-statements,-readability-named-parameter'
+Checks: '*,-clang-analyzer-alpha.*,-clang-diagnostic-expansion-to-defined,-cppcoreguidelines-pro-bounds-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-fuchsia-*,-google-*,-hicpp-*,-llvm*,-readability-named-parameter'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
+FormatStyle: none
 CheckOptions:
   - key:             readability-implicit-bool-cast.AllowConditionalIntegerCasts
     value:           '1'

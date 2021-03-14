@@ -49,16 +49,14 @@ auto IAudioFile::open(czstring path) -> std::unique_ptr<IAudioFile>
 {
     std::array<uint8_t, 8> signature{};
     File file = File::open(path, FileType::Asset);
-    if (file)
-    {
+    if (file) {
         [[maybe_unused]] auto read =
             file.read(signature.data(), signature.size());
         [[maybe_unused]] auto error = file.seek(0);
     }
 
 #ifdef USE_OGGVORBIS
-    if (OggVorbisAudioFile::signature_matches(signature))
-    {
+    if (OggVorbisAudioFile::signature_matches(signature)) {
         return std::unique_ptr<IAudioFile>{
             std::make_unique<OggVorbisAudioFile>(std::move(file))};
     }

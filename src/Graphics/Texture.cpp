@@ -34,8 +34,9 @@ TextureProvider::~TextureProvider()
 
     Texture::s_texture_provider = nullptr;
 
-    for (auto&& texture : texture_map_)
+    for (auto&& texture : texture_map_) {
         allocator_.destroy(texture.second.data);
+    }
 }
 
 template <typename T>
@@ -46,19 +47,13 @@ auto TextureProvider::get(std::string_view path,
                           Filter min_filter) -> Texture
 {
     auto [iter, inserted] = texture_map_.emplace(path, TextureData{});
-    if (inserted)
-    {
-        if constexpr (std::is_same_v<T, std::nullptr_t>)
-        {
+    if (inserted) {
+        if constexpr (std::is_same_v<T, std::nullptr_t>) {
             auto file = File::read(path.data(), FileType::Asset);
             load(iter, Image::decode(file, scale), mag_filter, min_filter);
-        }
-        else if constexpr (std::is_same_v<T, const Data&>)
-        {
+        } else if constexpr (std::is_same_v<T, const Data&>) {
             load(iter, Image::decode(data, scale), mag_filter, min_filter);
-        }
-        else if constexpr (std::is_same_v<T, const Image&>)
-        {
+        } else if constexpr (std::is_same_v<T, const Image&>) {
             load(iter, data, mag_filter, min_filter);
         }
     }
@@ -100,12 +95,12 @@ auto TextureProvider::raw_get(const Texture& texture) const -> TextureData
 void TextureProvider::release(const Texture& texture)
 {
     auto iter = texture_map_.find(texture.key());
-    if (iter == texture_map_.end())
+    if (iter == texture_map_.end()) {
         return;
+    }
 
     auto& texture_data = iter->second;
-    if (--texture_data.use_count == 0)
-    {
+    if (--texture_data.use_count == 0) {
         IF_DEVMODE(mem_used_ -= texture_data.size);
         allocator_.destroy(texture_data.data);
         texture_map_.erase(iter);
@@ -116,8 +111,9 @@ auto TextureProvider::try_get(const Texture& texture)
     -> std::optional<TextureData>
 {
     auto iter = texture_map_.find(texture.key());
-    if (iter == texture_map_.end())
+    if (iter == texture_map_.end()) {
         return std::nullopt;
+    }
 
     ++iter->second.use_count;
     return std::make_optional(iter->second);
@@ -152,19 +148,22 @@ TextureProvider* Texture::s_texture_provider = nullptr;
 
 Texture::~Texture()
 {
-    if (key_.empty())
+    if (key_.empty()) {
         return;
+    }
 
     s_texture_provider->release(*this);
 }
 
 auto Texture::operator=(const Texture& texture) -> Texture&
 {
-    if (&texture == this)
+    if (&texture == this) {
         return *this;
+    }
 
-    if (!key_.empty())
+    if (!key_.empty()) {
         s_texture_provider->release(*this);
+    }
 
     auto handle = s_texture_provider->get(texture.key());
     key_ = std::move(handle.key_);
@@ -173,8 +172,9 @@ auto Texture::operator=(const Texture& texture) -> Texture&
 
 auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 {
-    if (!key_.empty())
+    if (!key_.empty()) {
         s_texture_provider->release(*this);
+    }
 
     key_ = std::move(texture.key_);
     return *this;

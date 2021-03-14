@@ -10,8 +10,7 @@
 
 namespace Shader
 {
-    enum Attribute : unsigned int
-    {
+    enum Attribute : unsigned int {
         kAttributeVertex,
         kAttributeColor,
         kAttributeTexCoord,
@@ -19,23 +18,21 @@ namespace Shader
         kAttributeNone
     };
 
-    enum Type : unsigned int
-    {
+    enum Type : unsigned int {
         kTypeFragment = GL_FRAGMENT_SHADER,
         kTypeVertex = GL_VERTEX_SHADER
 #ifdef GL_GEOMETRY_SHADER
-        , kTypeGeometry = GL_GEOMETRY_SHADER
+        ,
+        kTypeGeometry = GL_GEOMETRY_SHADER
 #endif
     };
 
-    struct AttributeParams
-    {
+    struct AttributeParams {
         unsigned int index;
         rainbow::czstring name;
     };
 
-    struct Details
-    {
+    struct Details {
         bool texture0;
         bool texture1;
         const unsigned int program;
@@ -48,8 +45,7 @@ namespace Shader
         }
     };
 
-    struct Params
-    {
+    struct Params {
         Type type;
         unsigned int id;
         rainbow::czstring source;

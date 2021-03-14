@@ -27,8 +27,9 @@ VertexArray::VertexArray(VertexArray&& va) noexcept : array_(va.array_)
 VertexArray::~VertexArray()
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
-    if (array_ == 0)
+    if (array_ == 0) {
         return;
+    }
 
     glDeleteVertexArrays(1, &array_);
 #endif

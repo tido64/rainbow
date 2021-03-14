@@ -10,8 +10,7 @@
 namespace rainbow
 {
     /// <summary>Virtual key codes.</summary>
-    enum class VirtualKey : uint32_t
-    {
+    enum class VirtualKey : uint32_t {
         Unknown,
         A,
         B,
@@ -170,8 +169,7 @@ namespace rainbow
     template <typename T>
     auto to_virtualkey(const T&) -> VirtualKey;
 
-    struct KeyStroke
-    {
+    struct KeyStroke {
         template <typename T>
         static auto from_event(const T&) -> KeyStroke;
 

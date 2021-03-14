@@ -40,11 +40,9 @@ namespace
                         void* user_data,
                         cubeb_state state)
     {
-        switch (state)
-        {
+        switch (state) {
             case CUBEB_STATE_DRAINED:
-            case CUBEB_STATE_ERROR:
-            {
+            case CUBEB_STATE_ERROR: {
                 auto& channel = *static_cast<Channel*>(user_data);
                 cubeb_mixer->release_channel(channel);
                 break;
@@ -59,8 +57,7 @@ namespace
 bool CubebMixer::initialize(int max_channels)
 {
     auto context_name = std::error_code(ErrorCode::Success).category().name();
-    if (cubeb_init(&context_, context_name, nullptr) != CUBEB_OK)
-    {
+    if (cubeb_init(&context_, context_name, nullptr) != CUBEB_OK) {
         LOGF("Failed to initialise cubeb");
         return false;
     }
@@ -92,8 +89,7 @@ void CubebMixer::clear()
 void CubebMixer::process()
 {
     std::lock_guard<std::mutex> guard(drain_lock_);
-    if (!drain_.empty())
-    {
+    if (!drain_.empty()) {
         for (auto&& ch : drain_)
             release_channel(*ch);
         drain_.clear();
@@ -145,8 +141,7 @@ auto CubebMixer::create_stream(Sound* source) -> Channel*
         const auto frame_size = source.channels() * sizeof(int16_t);
         const auto read = source.read(output_buffer, num_frames * frame_size);
         const auto frames = static_cast<long>(read / frame_size);
-        if (frames < num_frames && channel.loop_count > 0)
-        {
+        if (frames < num_frames && channel.loop_count > 0) {
             --channel.loop_count;
             source.rewind();
             const auto additional_read =
@@ -168,8 +163,7 @@ auto CubebMixer::create_stream(Sound* source) -> Channel*
                                           process,
                                           &state_callback,
                                           &channel);
-    if (result != CUBEB_OK)
-    {
+    if (result != CUBEB_OK) {
         LOGE("Failed to initialize stream for '%s'", path);
         return nullptr;
     }
@@ -179,8 +173,7 @@ auto CubebMixer::create_stream(Sound* source) -> Channel*
 void CubebMixer::release_channel(Channel& channel)
 {
 
-    if (std::this_thread::get_id() != thread_id_)
-    {
+    if (std::this_thread::get_id() != thread_id_) {
         std::lock_guard<std::mutex> guard(drain_lock_);
         drain_.push_back(&channel);
         return;
@@ -272,8 +265,7 @@ void rainbow::audio::set_world_position(Channel*, Vec2f) {}
 void rainbow::audio::pause(Channel* channel)
 {
     if (channel == nullptr || channel->stream == nullptr ||
-        channel->state == ChannelState::Paused)
-    {
+        channel->state == ChannelState::Paused) {
         return;
     }
 

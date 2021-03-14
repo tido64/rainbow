@@ -16,9 +16,9 @@ namespace
     constexpr uint32_t kPVRHeaderVersion3 = 0x03525650;  // "PVR3"
 
     /// PVRTC texture header, as specified by Imagination Technologies Ltd.
-    /// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
-    struct PVRTexHeader
-    {
+    /// \see
+    /// http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
+    struct PVRTexHeader {
         uint32_t version;
         uint32_t flags;
         uint64_t pixel_format;

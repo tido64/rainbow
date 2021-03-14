@@ -19,8 +19,7 @@ using rainbow::graphics::RenderQueue;
 
 namespace
 {
-    struct DrawCommand
-    {
+    struct DrawCommand {
         Context& context;  // NOLINT
 
         void operator()(Animation*) const {}
@@ -34,8 +33,7 @@ namespace
         }
     };
 
-    struct UpdateCommand
-    {
+    struct UpdateCommand {
         GameBase& context;  // NOLINT
         const uint64_t dt;  // NOLINT
 

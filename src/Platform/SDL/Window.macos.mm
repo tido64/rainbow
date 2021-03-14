@@ -15,8 +15,7 @@ namespace
     {
         SDL_SysWMinfo wm_info;
         SDL_VERSION(&wm_info.version);
-        if (!SDL_GetWindowWMInfo(window, &wm_info))
-        {
+        if (!SDL_GetWindowWMInfo(window, &wm_info)) {
             R_ABORT("SDL: Failed to get window information: %s",  //
                     SDL_GetError());
         }

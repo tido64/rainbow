@@ -50,10 +50,7 @@ namespace rainbow::graphics
         /// <summary>
         ///   Returns whether this vertex array object is valid.
         /// </summary>
-        explicit operator bool() const
-        {
-            return static_cast<bool>(array_);
-        }
+        explicit operator bool() const { return static_cast<bool>(array_); }
 
     private:
 #ifdef USE_VERTEX_ARRAY_OBJECT

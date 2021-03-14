@@ -5,7 +5,7 @@ AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Linux
 FixNamespaceComments: true
 IncludeBlocks: Regroup
 IncludeCategories:

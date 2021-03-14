@@ -61,14 +61,12 @@ namespace
 namespace std
 {
     template <>
-    struct default_delete<ALCcontext>
-    {
+    struct default_delete<ALCcontext> {
         void operator()(ALCcontext* ctx) const { alcDestroyContext(ctx); }
     };
 
     template <>
-    struct default_delete<ALCdevice>
-    {
+    struct default_delete<ALCdevice> {
         void operator()(ALCdevice* device) const { alcCloseDevice(device); }
     };
 }  // namespace std
@@ -82,16 +80,14 @@ bool ALMixer::initialize(int max_channels)
 #endif
 
     std::unique_ptr<ALCdevice> device{alcOpenDevice(nullptr)};
-    if (device == nullptr)
-    {
+    if (device == nullptr) {
         LOGE("OpenAL: Failed to open audio device (code: 0x%x)", alGetError());
         return false;
     }
 
     std::unique_ptr<ALCcontext> context{
         alcCreateContext(device.get(), nullptr)};
-    if (context == nullptr)
-    {
+    if (context == nullptr) {
         LOGE("OpenAL: Failed to create context (code: 0x%x)", alGetError());
         return false;
     }
@@ -104,8 +100,7 @@ bool ALMixer::initialize(int max_channels)
     auto sources = std::make_unique<ALuint[]>(max_channels);
     alGenSources(max_channels, sources.get());
     auto result = alGetError();
-    if (is_fail(result))
-    {
+    if (is_fail(result)) {
         LOGE("OpenAL: Failed to generate sources (code: 0x%x)", result);
         return false;
     }
@@ -114,16 +109,14 @@ bool ALMixer::initialize(int max_channels)
     auto buffers = std::make_unique<ALuint[]>(buffer_count);
     alGenBuffers(buffer_count, buffers.get());
     result = alGetError();
-    if (is_fail(result))
-    {
+    if (is_fail(result)) {
         LOGE("OpenAL: Failed to generate buffers (code: 0x%x)", result);
         alDeleteSources(max_channels, sources.get());
         return false;
     }
 
     channels_.reserve(max_channels);
-    for (int i = 0; i < max_channels; ++i)
-    {
+    for (int i = 0; i < max_channels; ++i) {
         const int offset = i * Channel::kNumBuffers;
         channels_.emplace_back(sources[i], buffers.get() + offset);
     }
@@ -137,8 +130,7 @@ bool ALMixer::initialize(int max_channels)
 
 void ALMixer::clear()
 {
-    for (auto&& channel : channels_)
-    {
+    for (auto&& channel : channels_) {
         if (channel.sound() != nullptr)
             stop(&channel);
     }
@@ -149,32 +141,29 @@ void ALMixer::clear()
 void ALMixer::process()
 {
     auto buffer = get_small_buffer<uint8_t>(kAudioBufferSize);
-    for (Channel& channel : channels_)
-    {
+    for (Channel& channel : channels_) {
         const auto state = get_channel_state(channel);
         const auto type = get_channel_type(channel);
-        if (type != AL_STREAMING)
-        {
-            if (type != AL_UNDETERMINED && state == AL_STOPPED)
+        if (type != AL_STREAMING) {
+            if (type != AL_UNDETERMINED && state == AL_STOPPED) {
                 stop(&channel);
+            }
             continue;
         }
 
-        if (state == AL_PAUSED)
+        if (state == AL_PAUSED) {
             continue;
+        }
 
         auto sound = channel.sound();
         auto stream = sound->file.get();
 
         ALint processed{};
         alGetSourcei(channel.id(), AL_BUFFERS_PROCESSED, &processed);
-        for (ALint i = 0; i < processed; ++i)
-        {
+        for (ALint i = 0; i < processed; ++i) {
             size_t length = stream->read(buffer, kAudioBufferSize);
-            if (length == 0)
-            {
-                if (sound->loop_count == 0)
-                {
+            if (length == 0) {
+                if (sound->loop_count == 0) {
                     processed = i;
                     stop(&channel);
                     break;
@@ -207,13 +196,10 @@ void ALMixer::suspend(bool should_suspend)
     if (context_ == nullptr)
         return;
 
-    if (should_suspend)
-    {
+    if (should_suspend) {
         alcSuspendContext(context_);
         alcMakeContextCurrent(nullptr);
-    }
-    else
-    {
+    } else {
         alcMakeContextCurrent(context_);
         alcProcessContext(context_);
     }
@@ -229,8 +215,7 @@ auto ALMixer::create_sound(czstring path) -> Sound*
 
 auto ALMixer::get_channel() -> Channel*
 {
-    for (Channel& channel : channels_)
-    {
+    for (Channel& channel : channels_) {
         if (is_available(channel))
             return &channel;
     }
@@ -240,8 +225,7 @@ auto ALMixer::get_channel() -> Channel*
 
 void ALMixer::release(Sound* sound)
 {
-    for (Channel& channel : channels_)
-    {
+    for (Channel& channel : channels_) {
         if (channel.sound() == sound)
             stop(&channel);
     }
@@ -258,8 +242,7 @@ ALMixer::~ALMixer()
 
     suspend(true);
 
-    for (Channel& channel : channels_)
-    {
+    for (Channel& channel : channels_) {
         const ALuint source = channel.id();
         alDeleteSources(1, &source);
         alDeleteBuffers(Channel::kNumBuffers, channel.buffers());
@@ -278,8 +261,7 @@ auto rainbow::audio::load_sound(czstring path) -> Sound*
     R_ASSERT(!sound->stream, "Sound already opened as a stream");
 
     auto audio_file = IAudioFile::open(path);
-    if (!*audio_file)
-    {
+    if (!*audio_file) {
         release(sound);
         return nullptr;
     }
@@ -309,8 +291,7 @@ auto rainbow::audio::load_stream(czstring path) -> Sound*
     R_ASSERT(sound->buffer == 0, "Sound already opened as static");
 
     auto audio_file = IAudioFile::open(path);
-    if (!*audio_file)
-    {
+    if (!*audio_file) {
         release(sound);
         return nullptr;
     }
@@ -388,16 +369,14 @@ auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
 
     channel->set_sound(sound);
 
-    if (sound->stream)
-    {
+    if (sound->stream) {
         auto buffer = get_small_buffer<uint8_t>(kAudioBufferSize);
 
         // TODO: Prevent streaming from an already streaming sound.
         sound->file->rewind();
 
         int i{};
-        for (; i < Channel::kNumBuffers; ++i)
-        {
+        for (; i < Channel::kNumBuffers; ++i) {
             const size_t size = sound->file->read(buffer, kAudioBufferSize);
             alBufferData(  //
                 channel->buffers()[i],
@@ -410,9 +389,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
         }
 
         alSourceQueueBuffers(channel->id(), i, channel->buffers());
-    }
-    else
-    {
+    } else {
         alSourcei(channel->id(), AL_BUFFER, sound->buffer);
     }
 

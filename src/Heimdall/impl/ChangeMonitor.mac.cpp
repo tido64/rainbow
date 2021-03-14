@@ -6,11 +6,12 @@
 
 #ifdef USE_HEIMDALL
 
-#include <memory>
-#include <CoreFoundation/CoreFoundation.h>
+#    include <memory>
 
-#include "Common/Logging.h"
-#include "Common/NonCopyable.h"
+#    include <CoreFoundation/CoreFoundation.h>
+
+#    include "Common/Logging.h"
+#    include "Common/NonCopyable.h"
 
 using heimdall::ChangeMonitor;
 using rainbow::czstring;
@@ -30,10 +31,10 @@ namespace
     {
         auto monitor = static_cast<ChangeMonitor*>(clientCallBackInfo);
         auto paths = static_cast<char**>(eventPaths);
-        for (size_t i = 0; i < numEvents; ++i)
-        {
-            if ((eventFlags[i] & kFileModified) != kFileModified)
+        for (size_t i = 0; i < numEvents; ++i) {
+            if ((eventFlags[i] & kFileModified) != kFileModified) {
                 continue;
+            }
 
             monitor->on_modified(paths[i]);
         }
@@ -62,8 +63,9 @@ ChangeMonitor::ChangeMonitor(czstring directory)
     CFRelease(paths);
     CFRelease(path);
 
-    if (stream_ == nullptr)
+    if (stream_ == nullptr) {
         return;
+    }
 
     FSEventStreamScheduleWithRunLoop(
         stream_, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
@@ -74,8 +76,9 @@ ChangeMonitor::ChangeMonitor(czstring directory)
 
 ChangeMonitor::~ChangeMonitor()
 {
-    if (stream_ == nullptr)
+    if (stream_ == nullptr) {
         return;
+    }
 
     FSEventStreamStop(stream_);
     FSEventStreamInvalidate(stream_);

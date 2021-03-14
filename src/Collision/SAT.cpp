@@ -32,8 +32,7 @@ auto rainbow::overlaps(const Quad& a, float ar, const Quad& b, float br) -> bool
         (a.v3 - a.v2).normal().normalize(),
         (a.v0 - a.v3).normal().normalize(),
     };
-    if (!rainbow::are_equal(ar, br))
-    {
+    if (!rainbow::are_equal(ar, br)) {
         count = 8;
         axes[4] = (b.v1 - b.v0).normal().normalize();
         axes[5] = (b.v2 - b.v1).normal().normalize();

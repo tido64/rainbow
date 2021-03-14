@@ -10,8 +10,7 @@
 #include "Script/JavaScript/Helper.h"
 
 #define DUKR_PUT_PROP(obj, prop)                                               \
-    do                                                                         \
-    {                                                                          \
+    do {                                                                       \
         duk::push(ctx, obj.prop);                                              \
         duk::put_prop_literal(ctx, -2, #prop);                                 \
     } while (false)
@@ -30,8 +29,7 @@ namespace rainbow::duk
         duk_push_array(ctx);
         const auto& controller_states = input.controller_states();
         duk_uarridx_t i = 0;
-        for (auto&& state : controller_states)
-        {
+        for (auto&& state : controller_states) {
             duk_push_bare_object(ctx);
 
             duk::push(ctx, state.id());
@@ -112,8 +110,7 @@ namespace rainbow::duk
         duk::get_prop_literal(ctx, -1, event_name);
 
         duk_uarridx_t i = 0;
-        for (auto&& p : pointers)
-        {
+        for (auto&& p : pointers) {
             duk_push_bare_object(ctx);
             DUKR_PUT_PROP(p, hash);
             DUKR_PUT_PROP(p, x);

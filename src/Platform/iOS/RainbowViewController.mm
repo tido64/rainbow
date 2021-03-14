@@ -28,8 +28,7 @@ namespace
 @property(readonly, nonatomic) NSUInteger supportedInterfaceOrientations;
 @end
 
-@implementation RainbowViewController
-{
+@implementation RainbowViewController {
     std::optional<Director> _director;
     CMMotionManager* _motionManager;
     Pointer _pointers[kMaxTouches];
@@ -39,8 +38,7 @@ namespace
 - (instancetype)initWithNibName:(NSString*)nibNameOrNil
                          bundle:(NSBundle*)nibBundleOrNil
 {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])
-    {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         [self initialize];
     }
     return self;
@@ -48,8 +46,7 @@ namespace
 
 - (instancetype)initWithCoder:(NSCoder*)coder
 {
-    if (self = [super initWithCoder:coder])
-    {
+    if (self = [super initWithCoder:coder]) {
         [self initialize];
     }
     return self;
@@ -91,8 +88,7 @@ namespace
     const CGFloat height = CGRectGetHeight(space.bounds);
     const CGFloat scale = screen.nativeScale;
     Pointer* ptr = self.pointers;
-    for (UITouch* touch in touches)
-    {
+    for (UITouch* touch in touches) {
         const CGPoint p = [view convertPoint:[touch locationInView:view]
                            toCoordinateSpace:space];
         *ptr = Pointer{rainbow::narrow_cast<uint32_t>(touch.hash),
@@ -108,8 +104,7 @@ namespace
 
 - (void)update
 {
-    if (_motionManager.accelerometerActive)
-    {
+    if (_motionManager.accelerometerActive) {
         const CMAccelerometerData* data = _motionManager.accelerometerData;
         _director->input().accelerated(  //
             data.acceleration.x,
@@ -176,8 +171,7 @@ namespace
     [super viewDidLoad];
 
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    if (self.context == nil)
-    {
+    if (self.context == nil) {
         NSLog(@"Failed to create ES context");
         return;
     }
@@ -189,8 +183,7 @@ namespace
     CGSize size = CGSizeMake(bounds.width * scale, bounds.height * scale);
 
     if (self.supportedInterfaceOrientations ==
-        UIInterfaceOrientationMaskLandscape)
-    {
+        UIInterfaceOrientationMaskLandscape) {
         // Swap screen width and height. The retrieved screen size is based on
         // the device in a portrait-up orientation. It does not change as the
         // device rotates.
@@ -247,8 +240,7 @@ namespace
     _supportedInterfaceOrientations =
         (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
                               : UIInterfaceOrientationMaskLandscape);
-    if (config.needs_accelerometer())
-    {
+    if (config.needs_accelerometer()) {
         _motionManager = [[CMMotionManager alloc] init];
         _motionManager.accelerometerUpdateInterval =
             kAccelerometerUpdateInterval;

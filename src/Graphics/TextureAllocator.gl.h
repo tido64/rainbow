@@ -9,8 +9,7 @@
 
 namespace rainbow::graphics::gl
 {
-    struct TextureAllocator final : public ITextureAllocator
-    {
+    struct TextureAllocator final : public ITextureAllocator {
         void construct(TextureHandle&,
                        const Image&,
                        Filter mag_filter,
@@ -18,8 +17,8 @@ namespace rainbow::graphics::gl
 
         void destroy(TextureHandle&) override;
 
-        [[maybe_unused, nodiscard]]
-        auto max_size() const noexcept -> size_t override;
+        [[maybe_unused, nodiscard]] auto max_size() const noexcept
+            -> size_t override;
 
         void update(const TextureHandle&,
                     const Image&,

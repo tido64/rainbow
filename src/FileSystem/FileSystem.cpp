@@ -43,8 +43,7 @@ auto rainbow::filesystem::exists(czstring path) -> bool
 #if defined(RAINBOW_OS_ANDROID)
     auto asset_manager = g_native_activity->assetManager;
     auto asset = AAssetManager_open(asset_manager, path, AASSET_MODE_UNKNOWN);
-    if (asset != nullptr)
-    {
+    if (asset != nullptr) {
         AAsset_close(asset);
         return true;
     }
@@ -58,8 +57,7 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
 {
     g_bundle = &bundle;
 
-    if (PHYSFS_init(argv0) == 0)
-    {
+    if (PHYSFS_init(argv0) == 0) {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Initialization failed: %s",
              PHYSFS_getErrorByCode(error_code));
@@ -69,21 +67,16 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
     PHYSFS_permitSymbolicLinks(static_cast<int>(allow_symlinks));
 
     if (!is_empty(bundle.assets_path()) &&
-        PHYSFS_mount(bundle.assets_path(), nullptr, 0) == 0)
-    {
+        PHYSFS_mount(bundle.assets_path(), nullptr, 0) == 0) {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to mount bundle: %s",
              PHYSFS_getErrorByCode(error_code));
-    }
-    else if (PHYSFS_setWriteDir(filesystem::preferences_directory().c_str()) ==
-             0)
-    {
+    } else if (PHYSFS_setWriteDir(
+                   filesystem::preferences_directory().c_str()) == 0) {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to set preferences directory: %s",
              PHYSFS_getErrorByCode(error_code));
-    }
-    else if (PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0) == 0)
-    {
+    } else if (PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0) == 0) {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to mount preferences directory: %s",
              PHYSFS_getErrorByCode(error_code));
@@ -139,8 +132,9 @@ auto rainbow::filesystem::preferences_directory() -> const Path&
 auto rainbow::filesystem::real_path(czstring path) -> Path
 {
     auto containing_dir = PHYSFS_getRealDir(path);
-    if (containing_dir == nullptr)
+    if (containing_dir == nullptr) {
         return path;
+    }
 
     Path resolved_path{containing_dir};
     resolved_path /= path;

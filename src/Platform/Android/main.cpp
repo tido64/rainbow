@@ -28,8 +28,7 @@ using rainbow::graphics::Context;
 
 ANativeActivity* g_native_activity;
 
-struct RainbowContext
-{
+struct RainbowContext {
     /// <summary>Whether the window is in focus.</summary>
     bool active = false;
 
@@ -93,8 +92,7 @@ void android_main(android_app* app)
 #endif
     {
         auto sensor_manager = ASensorManager_getInstance();
-        if (get_accelerometer(sensor_manager) != nullptr)
-        {
+        if (get_accelerometer(sensor_manager) != nullptr) {
             context.sensor_event_queue = ASensorManager_createEventQueue(  //
                 sensor_manager,
                 app->looper,
@@ -110,26 +108,22 @@ void android_main(android_app* app)
 #endif
 
     Chrono chrono;
-    while (!context.done)
-    {
+    while (!context.done) {
         int events;
         struct android_poll_source* source;
         while (ALooper_pollAll(!context.active ? -1 : 0,
                                nullptr,
                                &events,
-                               reinterpret_cast<void**>(&source)) >= 0)
-        {
+                               reinterpret_cast<void**>(&source)) >= 0) {
             if (source != nullptr)
                 source->process(app, source);
 
             if (!context.active || context.done)
                 break;
 
-            if (auto queue = context.sensor_event_queue)
-            {
+            if (auto queue = context.sensor_event_queue) {
                 ASensorEvent event;
-                while (ASensorEventQueue_getEvents(queue, &event, 1) > 0)
-                {
+                while (ASensorEventQueue_getEvents(queue, &event, 1) > 0) {
 #ifdef USE_HEIMDALL
                     shake_gesture_detector.update(  //
                         {
@@ -158,16 +152,13 @@ void android_main(android_app* app)
     }
 
     context.director.reset();
-    if (context.display != EGL_NO_DISPLAY)
-    {
+    if (context.display != EGL_NO_DISPLAY) {
         detach_rendering_context(&context);
-        if (context.context != EGL_NO_CONTEXT)
-        {
+        if (context.context != EGL_NO_CONTEXT) {
             eglDestroyContext(context.display, context.context);
             context.context = EGL_NO_CONTEXT;
         }
-        if (context.surface != EGL_NO_SURFACE)
-        {
+        if (context.surface != EGL_NO_SURFACE) {
             eglDestroySurface(context.display, context.surface);
             context.surface = EGL_NO_SURFACE;
         }
@@ -188,8 +179,7 @@ void android_handle_display(RainbowContext* ctx)
 
     ctx->director.emplace();
     if (ctx->director->terminated() ||
-        (ctx->director->init({width, height}), ctx->director->terminated()))
-    {
+        (ctx->director->init({width, height}), ctx->director->terminated())) {
         LOGF("%s", ctx->director->error().message().c_str());
         ctx->done = true;
     }
@@ -198,8 +188,7 @@ void android_handle_display(RainbowContext* ctx)
 void android_init_display(RainbowContext* ctx, ANativeWindow* window)
 {
     EGLDisplay& dpy = ctx->display;
-    if (dpy == EGL_NO_DISPLAY)
-    {
+    if (dpy == EGL_NO_DISPLAY) {
         dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
         eglInitialize(dpy, 0, 0);
     }
@@ -224,27 +213,23 @@ void android_init_display(RainbowContext* ctx, ANativeWindow* window)
     eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
 
     EGLSurface& surface = ctx->surface;
-    if (surface == EGL_NO_SURFACE)
-    {
+    if (surface == EGL_NO_SURFACE) {
         EGLint format;
         eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
         ANativeWindow_setBuffersGeometry(window, 0, 0, format);
 
         surface = eglCreateWindowSurface(dpy, config, window, nullptr);
-        if (surface == EGL_NO_SURFACE)
-        {
+        if (surface == EGL_NO_SURFACE) {
             LOGF("Failed to create EGL window surface");
             return;
         }
     }
 
     EGLContext& context = ctx->context;
-    if (context == EGL_NO_CONTEXT)
-    {
+    if (context == EGL_NO_CONTEXT) {
         constexpr EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
         context = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
-        if (context == EGL_NO_CONTEXT)
-        {
+        if (context == EGL_NO_CONTEXT) {
             LOGF("Failed to create EGL rendering context");
             return;
         }
@@ -261,8 +246,7 @@ void android_init_display(RainbowContext* ctx, ANativeWindow* window)
 void android_handle_event(android_app* app, int32_t cmd)
 {
     RainbowContext* ctx = static_cast<RainbowContext*>(app->userData);
-    switch (cmd)
-    {
+    switch (cmd) {
         case APP_CMD_INIT_WINDOW:
             android_init_display(ctx, app->window);
             break;
@@ -278,8 +262,7 @@ void android_handle_event(android_app* app, int32_t cmd)
             break;
 
         case APP_CMD_GAINED_FOCUS:
-            if (auto queue = ctx->sensor_event_queue)
-            {
+            if (auto queue = ctx->sensor_event_queue) {
                 // 60 events per second (in usec).
                 constexpr int32_t rate = (1000 * 1000) / 60;
                 auto accelerometer_sensor = get_accelerometer();
@@ -299,8 +282,7 @@ void android_handle_event(android_app* app, int32_t cmd)
             break;
 
         case APP_CMD_RESUME:
-            if (ctx->surface != EGL_NO_SURFACE)
-            {
+            if (ctx->surface != EGL_NO_SURFACE) {
                 attach_rendering_context(ctx);
 
                 // From NVIDIA:
@@ -339,17 +321,14 @@ void android_handle_event(android_app* app, int32_t cmd)
 
 auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
 {
-    switch (AInputEvent_getType(event))
-    {
+    switch (AInputEvent_getType(event)) {
         case AINPUT_EVENT_TYPE_KEY:
-            switch (AKeyEvent_getKeyCode(event))
-            {
+            switch (AKeyEvent_getKeyCode(event)) {
                 case AKEYCODE_BACK:
                     return 1;
 #ifdef USE_HEIMDALL
                 case AKEYCODE_MENU:
-                    if (AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN)
-                    {
+                    if (AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN) {
                         static_cast<RainbowContext*>(app->userData)
                             ->director->show_diagnostic_tools();
                     }
@@ -370,11 +349,9 @@ auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
 auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
 {
     auto& director = static_cast<RainbowContext*>(app->userData)->director;
-    switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
-    {
+    switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK) {
         case AMOTION_EVENT_ACTION_DOWN:
-        case AMOTION_EVENT_ACTION_POINTER_DOWN:
-        {
+        case AMOTION_EVENT_ACTION_POINTER_DOWN: {
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
@@ -385,8 +362,7 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
         }
 
         case AMOTION_EVENT_ACTION_UP:
-        case AMOTION_EVENT_ACTION_POINTER_UP:
-        {
+        case AMOTION_EVENT_ACTION_POINTER_UP: {
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
@@ -396,8 +372,7 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
             break;
         }
 
-        case AMOTION_EVENT_ACTION_MOVE:
-        {
+        case AMOTION_EVENT_ACTION_MOVE: {
             const size_t count = AMotionEvent_getPointerCount(event);
             auto pointers = std::make_unique<Pointer[]>(count);
             std::generate_n(

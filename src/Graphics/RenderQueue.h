@@ -101,8 +101,7 @@ namespace rainbow::graphics
     template <typename F>
     void visit_all(F&& f, RenderQueue& queue)
     {
-        for (auto&& unit : queue)
-        {
+        for (auto&& unit : queue) {
             if (!unit.is_enabled())
                 continue;
 

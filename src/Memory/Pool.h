@@ -16,8 +16,7 @@ namespace rainbow
     namespace detail
     {
         template <typename T>
-        struct PoolItem : private NonCopyable<PoolItem<T>>
-        {
+        struct PoolItem : private NonCopyable<PoolItem<T>> {
             T element;
             PoolItem* next_free;
 
@@ -57,8 +56,7 @@ namespace rainbow
         template <typename... Args>
         auto construct(Args&&... args) -> value_type*
         {
-            if (!free_)
-            {
+            if (!free_) {
                 pool_.emplace_back(std::forward<Args>(args)...);
                 auto& i = pool_.back();
                 R_ASSERT(i.next_free == &i, "Expected sentinel");
@@ -86,8 +84,7 @@ namespace rainbow
         friend void for_each(Pool<U, V>& pool, F&& action)
         {
             const auto size = pool.size();
-            for (size_t i = 0; i < size; ++i)
-            {
+            for (size_t i = 0; i < size; ++i) {
                 auto& item = pool.pool_[i];
                 if (item.next_free != &item)
                     continue;

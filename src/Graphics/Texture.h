@@ -28,15 +28,13 @@ namespace rainbow::graphics
 
     using TextureHandle = std::array<intptr_t, 4>;
 
-    enum class Filter
-    {
+    enum class Filter {
         Nearest,
         Linear,
         Cubic,
     };
 
-    struct TextureData
-    {
+    struct TextureData {
         TextureHandle data{};
         uint32_t width = 0;
         uint32_t height = 0;
@@ -52,32 +50,28 @@ namespace rainbow::graphics
         explicit TextureProvider(ITextureAllocator&);
         ~TextureProvider();
 
-        [[nodiscard]]
-        auto get(std::string_view path,
-                 float scale = 1.0F,
-                 Filter mag_filter = Filter::Cubic,
-                 Filter min_filter = Filter::Linear) -> Texture;
+        [[nodiscard]] auto get(std::string_view path,
+                               float scale = 1.0F,
+                               Filter mag_filter = Filter::Cubic,
+                               Filter min_filter = Filter::Linear) -> Texture;
 
-        [[nodiscard]]
-        auto get(std::string_view path,
-                 const Data&,
-                 float scale = 1.0F,
-                 Filter mag_filter = Filter::Cubic,
-                 Filter min_filter = Filter::Linear) -> Texture;
+        [[nodiscard]] auto get(std::string_view path,
+                               const Data&,
+                               float scale = 1.0F,
+                               Filter mag_filter = Filter::Cubic,
+                               Filter min_filter = Filter::Linear) -> Texture;
 
-        [[nodiscard]]
-        auto get(std::string_view path,
-                 const Image&,
-                 Filter mag_filter = Filter::Cubic,
-                 Filter min_filter = Filter::Linear) -> Texture;
+        [[nodiscard]] auto get(std::string_view path,
+                               const Image&,
+                               Filter mag_filter = Filter::Cubic,
+                               Filter min_filter = Filter::Linear) -> Texture;
 
-        [[nodiscard]]
-        auto raw_get(const Texture&) const -> TextureData;
+        [[nodiscard]] auto raw_get(const Texture&) const -> TextureData;
 
         void release(const Texture&);
 
-        [[nodiscard]]
-        auto try_get(const Texture&) -> std::optional<TextureData>;
+        [[nodiscard]] auto try_get(const Texture&)
+            -> std::optional<TextureData>;
 
         void update(const Texture&,
                     const Image&,
@@ -104,8 +98,7 @@ namespace rainbow::graphics
 
 #ifdef USE_HEIMDALL
     public:
-        [[nodiscard]]
-        auto memory_usage() const
+        [[nodiscard]] auto memory_usage() const
         {
             return std::make_tuple(mem_used_, mem_peak_);
         }
@@ -154,8 +147,7 @@ namespace rainbow::graphics
         friend TextureProvider;
     };
 
-    struct ITextureAllocator
-    {
+    struct ITextureAllocator {
         virtual void construct(TextureHandle&,
                                const Image&,
                                Filter mag_filter,
@@ -163,8 +155,8 @@ namespace rainbow::graphics
 
         virtual void destroy(TextureHandle&) = 0;
 
-        [[maybe_unused, nodiscard]]
-        virtual auto max_size() const noexcept -> size_t = 0;
+        [[maybe_unused, nodiscard]] virtual auto max_size() const noexcept
+            -> size_t = 0;
 
         virtual void update(const TextureHandle&,
                             const Image&,

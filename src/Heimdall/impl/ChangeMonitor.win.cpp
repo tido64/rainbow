@@ -6,7 +6,7 @@
 
 #ifdef USE_HEIMDALL
 
-#include "Common/Logging.h"
+#    include "Common/Logging.h"
 
 using heimdall::ChangeMonitor;
 using rainbow::czstring;
@@ -32,8 +32,7 @@ ChangeMonitor::ChangeMonitor(czstring directory)
         char lpPath[MAX_PATH * 4];
         const DWORD nBufferLength = 8192;
         auto buffer = std::make_unique<DWORD[]>(nBufferLength);
-        do
-        {
+        do {
             std::this_thread::sleep_for(std::chrono::seconds(1));
             DWORD dwBytesReturned = 0;
             ReadDirectoryChangesW(
@@ -50,8 +49,7 @@ ChangeMonitor::ChangeMonitor(czstring directory)
 
             const uint8_t* lpBuffer = reinterpret_cast<uint8_t*>(buffer.get());
             const FILE_NOTIFY_INFORMATION* lpInfo = nullptr;
-            do
-            {
+            do {
                 if (!monitoring_)
                     return;
 
@@ -62,15 +60,25 @@ ChangeMonitor::ChangeMonitor(czstring directory)
 
                 const int cchWideChar =
                     lpInfo->FileNameLength / sizeof(lpInfo->FileName[0]);
-                const int length = WideCharToMultiByte(
-                    CP_UTF8, 0, lpInfo->FileName, cchWideChar, nullptr, 0,
-                    nullptr, nullptr);
+                const int length = WideCharToMultiByte(CP_UTF8,
+                                                       0,
+                                                       lpInfo->FileName,
+                                                       cchWideChar,
+                                                       nullptr,
+                                                       0,
+                                                       nullptr,
+                                                       nullptr);
                 if (length == 0)
                     continue;
 
-                WideCharToMultiByte(
-                    CP_UTF8, 0, lpInfo->FileName, cchWideChar, lpPath, length,
-                    nullptr, nullptr);
+                WideCharToMultiByte(CP_UTF8,
+                                    0,
+                                    lpInfo->FileName,
+                                    cchWideChar,
+                                    lpPath,
+                                    length,
+                                    nullptr,
+                                    nullptr);
                 lpPath[length] = '\0';
                 on_modified(lpPath);
 

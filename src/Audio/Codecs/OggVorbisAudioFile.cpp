@@ -37,8 +37,7 @@ namespace
     void ov_log_error(int err)
     {
         czstring error = "Undocumented error.";
-        switch (err)
-        {
+        switch (err) {
             case OV_EREAD:
                 error = "A read from media returned an error.";
                 break;
@@ -82,15 +81,13 @@ OggVorbisAudioFile::OggVorbisAudioFile(File f)
 {
     const int result =
         ov_open_callbacks(&file_, &vf_, nullptr, 0, ov_callbacks_asset);
-    if (result < 0)
-    {
+    if (result < 0) {
         ov_log_error(result);
         return;
     }
 
     vi_ = ov_info(&vf_, -1);
-    if (vi_ == nullptr)
-    {
+    if (vi_ == nullptr) {
         ov_clear(&vf_);
         LOGE("Vorbis: Failed to retrieve Ogg bitstream info.");
     }
@@ -116,8 +113,7 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
     int bitstream = 0;
 
     // Read until buffer is full.
-    do
-    {
+    do {
         const int64_t read = ov_read(  //
             &vf_,
             buffer + offset,
@@ -139,8 +135,7 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
 bool OggVorbisAudioFile::seek(int64_t offset)
 {
     const int result = ov_raw_seek(&vf_, offset);
-    if (result != 0)
-    {
+    if (result != 0) {
         ov_log_error(result);
         return false;
     }

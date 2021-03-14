@@ -5,8 +5,10 @@
 #ifndef PLATFORM_SDL_CONTEXT_H_
 #define PLATFORM_SDL_CONTEXT_H_
 
+// clang-format off
 #include <SDL_config.h>  // NOLINT: Ensure we include the correct SDL_config.h.
 #include <SDL.h>
+// clang-format on
 
 #include "Math/Vec2.h"
 #include "Platform/SDL/Window.h"

@@ -107,11 +107,11 @@ namespace rainbow
     void Director::start()
     {
         script_ = GameBase::create(*this);
-        if (!terminated())
+        if (!terminated()) {
             script_->init(renderer_.surface_size);
+        }
 
-        if (terminated())
-        {
+        if (terminated()) {
             LOGF("%s", error().message().c_str());
             LOGI("Booting 'NoGame'...");
             script_ = std::make_unique<NoGame>(*this, error());
