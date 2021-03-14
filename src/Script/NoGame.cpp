@@ -38,7 +38,8 @@ void NoGame::init_impl(const Vec2i& screen)
 
     render_queue().emplace_back(batch_);
 
-#if !defined(RAINBOW_OS_IOS)  // TODO: Can't access system fonts on iOS
+    // TODO: Can't access system fonts on iOS or in a browser
+#if !defined(RAINBOW_JS) && !defined(RAINBOW_OS_IOS)
     if (error_)
     {
         label_ = std::make_unique<Label>();

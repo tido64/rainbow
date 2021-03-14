@@ -28,7 +28,13 @@ namespace
         {
         }
 
-        ~MonospaceFont() { fclose(file_); }
+        ~MonospaceFont()
+        {
+            if (file_ != nullptr)
+            {
+                fclose(file_);
+            }
+        }
 
         [[nodiscard]] auto file_size() const -> size_t
         {
@@ -78,7 +84,7 @@ auto rainbow::text::monospace_font_path() -> czstring
             return path;
     }
 
-    R_ABORT("No monospace fonts found");
+    LOGW("No monospace fonts found");
     return nullptr;
 #elif defined(RAINBOW_OS_WINDOWS)
     return "C:/Windows/Fonts/consola.ttf";
