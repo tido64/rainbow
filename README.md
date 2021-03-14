@@ -19,8 +19,8 @@ out the [examples](#examples) below.
 [[Documentation](https://tido64.github.io/rainbow/)] Get started. It's a good
 place to start learning what you can do with Rainbow.
 
-[[Forum](https://www.reddit.com/r/rainbowtech)] Get answers, or even better,
-share your awesome work!
+[[Discussions](https://github.com/tido64/rainbow/discussions)] Get answers, or
+even better, share your awesome work!
 
 [[Roadmap](https://github.com/tido64/rainbow/projects)] Find planned features
 and future directions (the old board can be found on
