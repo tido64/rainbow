@@ -64,8 +64,7 @@ namespace b2
     private:
         static const size_t kMaxNumWorlds = 6;
 
-        struct Vertex
-        {
+        struct Vertex {
             b2Color color;
             b2Vec2 vertex;
 

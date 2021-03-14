@@ -40,10 +40,8 @@ Input::~Input()
 template <typename F>
 void Input::process_controller(ControllerID id, F&& process)
 {
-    for (auto i = 0U; i < controllers_.size(); ++i)
-    {
-        if (controllers_[i].id() == id)
-        {
+    for (auto i = 0U; i < controllers_.size(); ++i) {
+        if (controllers_[i].id() == id) {
             process(i);
             break;
         }
@@ -117,18 +115,20 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
 void Input::on_controller_connected(ControllerID id)
 {
     int32_t port = -1;
-    for (auto i = 0U; i < controllers_.size(); ++i)
-    {
+    for (auto i = 0U; i < controllers_.size(); ++i) {
         auto& controller = controllers_[i];
-        if (controller.id() == id)
+        if (controller.id() == id) {
             return;
+        }
 
-        if (port < 0 && !controller.is_assigned())
+        if (port < 0 && !controller.is_assigned()) {
             port = narrow_cast<int>(i);
+        }
     }
 
-    if (port < 0)
+    if (port < 0) {
         return;
+    }
 
     controllers_[port].assign(id);
     LOGI("Controller %u plugged into port %d", id, port + 1);
@@ -217,8 +217,9 @@ Input* InputListener::s_input_manager = nullptr;
 
 void InputListener::on_end_link_changed(InputListener& new_link)
 {
-    if (s_input_manager == nullptr)
+    if (s_input_manager == nullptr) {
         return;
+    }
 
     s_input_manager->on_last_listener_changed(new_link, {});
 }

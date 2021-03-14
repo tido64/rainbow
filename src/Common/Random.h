@@ -49,12 +49,9 @@ namespace xorshift
         void discard(uint64_t)
         {
             uint64_t t[16]{};
-            for (auto i : kJump)
-            {
-                for (int b = 0; b < 64; ++b)
-                {
-                    if (i & 1ULL << b)
-                    {
+            for (auto i : kJump) {
+                for (int b = 0; b < 64; ++b) {
+                    if (i & 1ULL << b) {
                         for (int j = 0; j < 16; ++j)
                             t[j] ^= s_[(j + p_) & 15];
                     }
@@ -68,10 +65,8 @@ namespace xorshift
 
         void seed(uint64_t seed = 0)
         {
-            if (seed != 0)
-            {
-                for (auto&& s : s_)
-                {
+            if (seed != 0) {
+                for (auto&& s : s_) {
                     // This is a fixed-increment version of Java 8's
                     // SplittableRandom generator.
                     //
@@ -89,9 +84,7 @@ namespace xorshift
                     z = (z ^ (z >> 27)) * UINT64_C(0x94D049BB133111EB);
                     s = z ^ (z >> 31);
                 }
-            }
-            else
-            {
+            } else {
                 std::random_device rand_dev;
                 std::uniform_int_distribution<uint64_t> dist;
                 std::generate(std::begin(s_), std::end(s_), [&rand_dev, &dist] {
@@ -137,8 +130,7 @@ namespace xorshift
 namespace rainbow
 {
     /// <summary>User-friendly wrapper for xorshift1024* generator.</summary>
-    struct Random
-    {
+    struct Random {
         std::uniform_real_distribution<double> dist;
         xorshift::xorshift1024star gen;
 

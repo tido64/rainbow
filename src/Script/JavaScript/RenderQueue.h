@@ -36,13 +36,10 @@ namespace rainbow::duk
             const auto result = ([](duk_context* ctx,
                                     duk_idx_t obj_idx,
                                     graphics::RenderQueue* queue) {
-                if (duk_is_number(ctx, obj_idx))
-                {
+                if (duk_is_number(ctx, obj_idx)) {
                     auto index = duk_require_int(ctx, obj_idx);
                     return queue->begin() + index;
-                }
-                else if (duk_is_string(ctx, obj_idx))
-                {
+                } else if (duk_is_string(ctx, obj_idx)) {
                     auto tag = duk_require_string(ctx, obj_idx);
                     return std::find_if(  //
                         queue->begin(),
@@ -50,9 +47,7 @@ namespace rainbow::duk
                         [tag](graphics::RenderUnit& unit) {
                             return unit == tag;
                         });
-                }
-                else
-                {
+                } else {
                     auto target = duk::push_instance<void*>(ctx, obj_idx);
                     return std::find_if(
                         queue->begin(),
@@ -171,8 +166,7 @@ namespace rainbow::duk
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                if (!duk_check_type(ctx, 0, DUK_TYPE_NUMBER))
-                {
+                if (!duk_check_type(ctx, 0, DUK_TYPE_NUMBER)) {
                     dukr_type_error(ctx, "Expected 'position' to be a number");
                 }
 

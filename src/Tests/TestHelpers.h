@@ -64,7 +64,6 @@ namespace rainbow::test
 
 namespace rainbow
 {
-    struct ISolemnlySwearThatIAmOnlyTesting
-    {
+    struct ISolemnlySwearThatIAmOnlyTesting {
     };
 }  // namespace rainbow

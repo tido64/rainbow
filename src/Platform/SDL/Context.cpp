@@ -32,8 +32,7 @@ namespace
 SDLContext::SDLContext(const Config& config)
     : window_(nullptr), vsync_(false), fullscreen_(0), context_(nullptr)
 {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
-    {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
         LOGF("SDL: Unable to initialise video: %s", SDL_GetError());
         return;
     }
@@ -50,8 +49,7 @@ SDLContext::SDLContext(const Config& config)
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-    if (config.msaa() > 0)
-    {
+    if (config.msaa() > 0) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaa());
     }
@@ -65,16 +63,14 @@ SDLContext::SDLContext(const Config& config)
                                size.x,
                                size.y,
                                flags);
-    if (window_ == nullptr)
-    {
+    if (window_ == nullptr) {
         R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
         return;
     }
 
     set_hidpi_mode(window_, config.hidpi());
     context_ = SDL_GL_CreateContext(window_);
-    if (context_ == nullptr)
-    {
+    if (context_ == nullptr) {
         R_ABORT("SDL: Failed to create GL context: %s", SDL_GetError());
         return;
     }
@@ -91,23 +87,25 @@ SDLContext::SDLContext(const Config& config)
     LOGI("SDL: Resolution: %ix%i", resolution.x, resolution.y);
     int msaa = 0;
     SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &msaa);
-    if (msaa > 0)
+    if (msaa > 0) {
         LOGI("SDL: Anti-aliasing: %ix MSAA", msaa);
-    else
+    } else {
         LOGI("SDL: Anti-aliasing: Disabled");
+    }
     LOGI("SDL: Vertical sync: %s", (vsync_ ? "Enabled" : "Disabled"));
 #endif
 }
 
 SDLContext::~SDLContext()
 {
-    if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
+    if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
         return;
+    }
 
-    if (window_ != nullptr)
-    {
-        if (context_ != nullptr)
+    if (window_ != nullptr) {
+        if (context_ != nullptr) {
             SDL_GL_DeleteContext(context_);
+        }
         SDL_DestroyWindow(window_);
     }
     SDL_Quit();
@@ -115,8 +113,9 @@ SDLContext::~SDLContext()
 
 void SDLContext::swap() const
 {
-    if (!vsync_)
+    if (!vsync_) {
         Chrono::sleep(0);
+    }
     SDL_GL_SwapWindow(window_);
 }
 

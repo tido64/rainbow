@@ -20,8 +20,7 @@ namespace rainbow
         template <typename Iter, typename K>
         [[nodiscard]] static auto find(Iter i, Iter last, K&& key) -> Iter
         {
-            for (; i != last; ++i)
-            {
+            for (; i != last; ++i) {
                 if (i->first == key)
                     return i;
             }
@@ -64,8 +63,7 @@ namespace rainbow
         [[nodiscard]] auto find_value(U&& value) -> iterator
         {
             auto end = this->end();
-            for (auto i = begin(); i != end; ++i)
-            {
+            for (auto i = begin(); i != end; ++i) {
                 if (i->second == value)
                     return i;
             }
@@ -76,8 +74,7 @@ namespace rainbow
         auto emplace(K&& key, U&& value) -> std::pair<iterator, bool>
         {
             auto end = this->end();
-            for (auto i = begin(); i != end; ++i)
-            {
+            for (auto i = begin(); i != end; ++i) {
                 if (i->first == key)
                     return std::make_pair(i, false);
             }

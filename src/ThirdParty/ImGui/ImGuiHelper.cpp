@@ -121,14 +121,11 @@ void rainbow::imgui::init(Context& ctx, float font_size, float scale)
 #endif  // RAINBOW_SDL
 
     const float scaled_font_size = font_size * scale;
-    if (text::monospace_font_path() == nullptr)
-    {
+    if (text::monospace_font_path() == nullptr) {
         ImFontConfig font_config;
         font_config.SizePixels = scaled_font_size;
         io.Fonts->AddFontDefault(&font_config);
-    }
-    else
-    {
+    } else {
         constexpr ImWchar kCommandKey = 0x2318;
         constexpr ImWchar kOptionKey = 0x2325;
         static constexpr std::array<ImWchar, 7> kGlyphRanges{
@@ -181,8 +178,7 @@ void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
 {
     auto& io = ImGui::GetIO();
     auto& render_data = get_render_data(io);
-    if (render_data.window_scale().x == 0.0F)
-    {
+    if (render_data.window_scale().x == 0.0F) {
         render_data.initial_window_width(ctx.window_size.x);
         render_data.window_scale(
             {narrow_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
@@ -210,20 +206,15 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
     const auto window_height = io.DisplaySize.y * io.DisplayFramebufferScale.y;
     auto& render_data = get_render_data(io);
     render_data.vertex_array().bind();
-    for (int i = 0; i < draw_data->CmdListsCount; ++i)
-    {
+    for (int i = 0; i < draw_data->CmdListsCount; ++i) {
         const ImDrawList* cmd_list = draw_data->CmdLists[i];
         const ImDrawIdx* idx_buffer_offset = nullptr;
 
         render_data.set_draw_list(cmd_list);
-        for (auto&& cmd : cmd_list->CmdBuffer)
-        {
-            if (cmd.UserCallback != nullptr)
-            {
+        for (auto&& cmd : cmd_list->CmdBuffer) {
+            if (cmd.UserCallback != nullptr) {
                 cmd.UserCallback(cmd_list, &cmd);
-            }
-            else
-            {
+            } else {
                 graphics::bind(ctx, *static_cast<Texture*>(cmd.TextureId));
                 graphics::scissor(
                     ctx,
@@ -252,8 +243,7 @@ auto rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
 {
     auto& io = ImGui::GetIO();
 #ifdef RAINBOW_SDL
-    switch (key.key)
-    {
+    switch (key.key) {
         case VirtualKey::Home:
         case VirtualKey::PageUp:
         case VirtualKey::End:
@@ -282,16 +272,15 @@ auto rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
         case VirtualKey::RightAlt:
             io.KeyAlt = down;
             break;
-        default:
-        {
+        default: {
             const int keycode = to_keycode(key.key);
-            if (static_cast<unsigned>(keycode) < array_size(io.KeysDown))
-            {
+            if (static_cast<unsigned>(keycode) < array_size(io.KeysDown)) {
                 io.KeysDown[keycode] = down;
 
                 // TODO: Implement SDL_TEXTINPUT
-                if (down)
+                if (down) {
                     io.AddInputCharacter(keycode);
+                }
             }
             break;
         }

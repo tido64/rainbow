@@ -19,10 +19,10 @@ namespace
     template <typename F, typename... Args>
     void ForEachDynamicBody(b2Body* body, F&& f, Args&&... args)
     {
-        for (auto b = body; b; b = b->GetNext())
-        {
-            if (b->GetType() == b2_staticBody)
+        for (auto b = body; b; b = b->GetNext()) {
+            if (b->GetType() == b2_staticBody) {
                 continue;
+            }
 
             f(b, std::forward<Args>(args)...);
         }
@@ -79,13 +79,11 @@ namespace b2
     {
         elapsed_ += timeStep;
         const int steps = static_cast<int>(elapsed_ * kStepsPerMs);
-        if (steps == 0)
+        if (steps == 0) {
             RestoreState();
-        else
-        {
+        } else {
             elapsed_ -= steps / kStepsPerMs;
-            for (int i = 0; i < std::min(steps, kMaxSteps); ++i)
-            {
+            for (int i = 0; i < std::min(steps, kMaxSteps); ++i) {
                 world_.Step(kFixedStep, velocityIterations, positionIterations);
                 SaveState();
             }

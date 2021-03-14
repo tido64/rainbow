@@ -61,18 +61,18 @@ auto graphics::memory_info() -> graphics::MemoryInfo
 {
     static const GLenum pname = [] {
         std::string_view ext(gl_get_string(GL_EXTENSIONS));
-        if (ext.find("GL_NVX_gpu_memory_info"sv) != std::string_view::npos)
+        if (ext.find("GL_NVX_gpu_memory_info"sv) != std::string_view::npos) {
             return GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX;
-        if (ext.find("GL_ATI_meminfo"sv) != std::string_view::npos)
+        }
+        if (ext.find("GL_ATI_meminfo"sv) != std::string_view::npos) {
             return GL_TEXTURE_FREE_MEMORY_ATI;
+        }
         return 0;
     }();
 
     MemoryInfo meminfo{};
-    switch (pname)
-    {
-        case GL_TEXTURE_FREE_MEMORY_ATI:
-        {
+    switch (pname) {
+        case GL_TEXTURE_FREE_MEMORY_ATI: {
             GLint info[4];
             glGetIntegerv(pname, info);
             meminfo.current_available = info[0];
@@ -119,14 +119,11 @@ void graphics::set_surface_size(Context& ctx, const Vec2i& resolution)
 void graphics::set_window_size(Context& ctx, const Vec2i& size, float factor)
 {
     ctx.scale = static_cast<float>(ctx.surface_size.x) / size.x;
-    if (factor * size == ctx.surface_size)
-    {
+    if (factor * size == ctx.surface_size) {
         ctx.zoom = 1.0f;
         ctx.origin.x = 0;
         ctx.origin.y = 0;
-    }
-    else
-    {
+    } else {
         const Vec2i actual_size = factor * size;
         ctx.zoom =
             std::min(static_cast<float>(actual_size.x) / ctx.surface_size.x,
@@ -204,8 +201,9 @@ void graphics::scissor(const Context& ctx, int x, int y, int width, int height)
 
 Context::~Context()
 {
-    if (this == g_context)
+    if (this == g_context) {
         g_context = nullptr;
+    }
 }
 
 auto Context::initialize() -> std::error_code
@@ -222,13 +220,13 @@ auto Context::initialize() -> std::error_code
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if (!shader_manager.init())
+    if (!shader_manager.init()) {
         return ErrorCode::ShaderManagerInitializationFailed;
+    }
 
     constexpr size_t kElementBufferSize = kMaxSprites * 6;
     auto default_indices = std::make_unique<uint16_t[]>(kElementBufferSize);
-    for (size_t i = 0; i < kMaxSprites; ++i)
-    {
+    for (size_t i = 0; i < kMaxSprites; ++i) {
         const auto index = i * 6;
         const auto vertex = static_cast<uint16_t>(i * 4);
         default_indices[index] = vertex;
@@ -244,8 +242,9 @@ auto Context::initialize() -> std::error_code
     element_buffer = buffer;
     element_buffer.upload(default_indices.get(), kElementBufferSize);
 
-    if (glGetError() != GL_NO_ERROR)
+    if (glGetError() != GL_NO_ERROR) {
         return ErrorCode::RenderInitializationFailed;
+    }
 
     g_context = this;
     return ErrorCode::Success;

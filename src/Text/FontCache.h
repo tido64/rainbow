@@ -46,19 +46,16 @@ namespace rainbow
         void update(graphics::TextureProvider&);
 
     private:
-        struct FontFace
-        {
+        struct FontFace {
             FT_Face face;
             Data data;
         };
 
-        struct GlyphInfo
-        {
+        struct GlyphInfo {
             std::array<SpriteVertex, 4> vertices;
         };
 
-        struct Index
-        {
+        struct Index {
             FT_Face face;
             int32_t font_size;
             uint32_t index;
@@ -77,8 +74,7 @@ namespace rainbow
             }
         };
 
-        enum class State
-        {
+        enum class State {
             Ready,
             NeedsUpdate,
         };

@@ -18,14 +18,12 @@ namespace rainbow::timing
         if (t < (1.0f / 2.75f))
             return 7.5625f * t * t;
 
-        if (t < (2.0f / 2.75f))
-        {
+        if (t < (2.0f / 2.75f)) {
             t -= 1.5f / 2.75f;
             return 7.5625f * t * t + .75f;
         }
 
-        if (t < (2.5f / 2.75f))
-        {
+        if (t < (2.5f / 2.75f)) {
             t -= 2.25f / 2.75f;
             return 7.5625f * t * t + .9375f;
         }

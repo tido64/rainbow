@@ -12,8 +12,7 @@
 
 namespace rainbow::audio
 {
-    struct IAudioFile : private NonCopyable<IAudioFile>
-    {
+    struct IAudioFile : private NonCopyable<IAudioFile> {
         static auto open(czstring path) -> std::unique_ptr<IAudioFile>;
 
         virtual ~IAudioFile() {}

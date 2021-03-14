@@ -13,14 +13,12 @@
 namespace std
 {
     template <>
-    struct default_delete<NSVGimage>
-    {
+    struct default_delete<NSVGimage> {
         void operator()(NSVGimage* image) { nsvgDelete(image); }
     };
 
     template <>
-    struct default_delete<NSVGrasterizer>
-    {
+    struct default_delete<NSVGrasterizer> {
         void operator()(NSVGrasterizer* rasterizer)
         {
             nsvgDeleteRasterizer(rasterizer);

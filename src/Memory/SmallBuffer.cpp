@@ -10,8 +10,9 @@ auto rainbow::get_small_buffer(size_t size) -> void*
 {
     constexpr size_t kSmallBufferSize = 8192;
 
-    if (size > kSmallBufferSize)
+    if (size > kSmallBufferSize) {
         return nullptr;
+    }
 
     thread_local std::array<uint8_t, kSmallBufferSize> buffer;
     return buffer.data();

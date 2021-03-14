@@ -63,6 +63,6 @@ namespace rainbow
         std::mutex mutex_;
         value_type value_;
     };
-}
+}  // namespace rainbow
 
 #endif

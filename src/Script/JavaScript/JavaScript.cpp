@@ -89,8 +89,7 @@ JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
 
     auto& bundle = filesystem::bundle();
     auto index_js = bundle.main_script();
-    if (index_js == nullptr)
-    {
+    if (index_js == nullptr) {
         constexpr std::array<czstring, 3> kEntryPoints{
             "index.js",
             "index.bs.js",
@@ -101,14 +100,12 @@ JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
         auto i = std::find_if(std::begin(kEntryPoints), end, [](auto&& path) {
             return filesystem::exists(path);
         });
-        if (i == end)
-        {
+        if (i == end) {
             LOGE("No script was found at these locations:");
             auto assets_path = is_empty(bundle.assets_path())
                                    ? "assets"
                                    : bundle.assets_path();
-            for (auto&& path : kEntryPoints)
-            {
+            for (auto&& path : kEntryPoints) {
                 LOGE("    %s%s%s",
                      assets_path,
                      filesystem::path_separator(),
@@ -127,13 +124,10 @@ JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
     if (duk_pcompile_lstring_filename(context_,
                                       DUK_COMPILE_STRICT,
                                       data.as<const char*>(),
-                                      data.size()) != 0)
-    {
+                                      data.size()) != 0) {
         LOGF("JavaScript: %s", duk_safe_to_string(context_, -1));
         terminate(ErrorCode::ScriptCompilationFailed);
-    }
-    else
-    {
+    } else {
         duk_pcall(context_, 0);
     }
 
@@ -157,8 +151,7 @@ void JavaScript::update_impl(uint64_t dt)
 {
     ENSURE(duk::call(context_, "update", dt));
 
-    if (has_pointer_events_)
-    {
+    if (has_pointer_events_) {
         has_pointer_events_ = false;
         duk::clear_pointer_events(context_);
     }

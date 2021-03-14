@@ -22,24 +22,29 @@ using rainbow::Image;
 auto Image::decode(const Data& data, float scale) -> Image
 {
 #ifdef USE_DDS
-    if (dds::check(data))
+    if (dds::check(data)) {
         return dds::decode(data);
+    }
 #endif  // USE_DDS
 
 #ifdef USE_PVRTC
-    if (pvrtc::check(data))
+    if (pvrtc::check(data)) {
         return pvrtc::decode(data);
+    }
 #endif  // USE_PVRTC
 
-    if (png::check(data))
+    if (png::check(data)) {
         return png::decode(data);
+    }
 
-    if (svg::check(data))
+    if (svg::check(data)) {
         return svg::decode(data, scale);
+    }
 
 #ifdef RAINBOW_TEST
-    if (memcmp(data.bytes(), "RNBWMOCK", 8) == 0)
+    if (memcmp(data.bytes(), "RNBWMOCK", 8) == 0) {
         return {};
+    }
 #endif
 
     R_ASSERT(false, "Unknown image format");

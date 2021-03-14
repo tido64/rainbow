@@ -26,25 +26,20 @@ Bundle::Bundle(ArrayView<zstring> args) : main_script_(nullptr)
     R_ASSERT(!exec_path_.empty(),
              "Failed to canonicalize absolute path to executable");
 
-    if (args.size() >= 2)
-    {
+    if (args.size() >= 2) {
         Path script_path{args[1]};
-        if (system::is_directory(script_path.c_str()))
-        {
+        if (system::is_directory(script_path.c_str())) {
             assets_path_ = std::move(script_path);
             return;
         }
 
-        if (system::is_regular_file(script_path.c_str()))
-        {
-            if (is_zip_file(script_path))
-            {
+        if (system::is_regular_file(script_path.c_str())) {
+            if (is_zip_file(script_path)) {
                 assets_path_ = std::move(script_path);
                 return;
             }
 
-            if (script_path.has_parent_path())
-            {
+            if (script_path.has_parent_path()) {
                 assets_path_ = script_path.parent_path();
                 main_script_ = args[1] + assets_path_.string().length() + 1;
                 return;

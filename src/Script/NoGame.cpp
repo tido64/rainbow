@@ -40,8 +40,7 @@ void NoGame::init_impl(const Vec2i& screen)
 
     // TODO: Can't access system fonts on iOS or in a browser
 #if !defined(RAINBOW_JS) && !defined(RAINBOW_OS_IOS)
-    if (error_)
-    {
+    if (error_) {
         label_ = std::make_unique<Label>();
         label_->color({0xf4, 0x43, 0x36})
             .font_size(truncate<int>(24 * scale))
@@ -60,8 +59,7 @@ void NoGame::init_impl(const Vec2i& screen)
 void NoGame::update_impl(uint64_t)
 {
     static bool run_once = false;
-    if (!run_once)
-    {
+    if (!run_once) {
         run_once = true;
         rainbow::fade(&batch_->at(0), 1.0F, 2000, &timing::linear);
     }

@@ -17,10 +17,9 @@ namespace rainbow
     using czstring = basic_zstring<const char>;
     using zstring = basic_zstring<char>;
 
-    enum class StringComparison
-    {
+    enum class StringComparison {
         Ordinal,
-        IgnoreCase
+        IgnoreCase,
     };
 
     template <size_t N>
@@ -48,8 +47,7 @@ namespace rainbow
             return false;
 
         czstring s = str.data() + str.length() - suffix_length;
-        for (size_t i = 0; i < suffix_length; ++i, ++s)
-        {
+        for (size_t i = 0; i < suffix_length; ++i, ++s) {
             if (tolower(*s) != tolower(suffix[i]))
                 return false;
         }

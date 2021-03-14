@@ -43,8 +43,7 @@ SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
 
 void SpriteBatch::set_normal(const Texture& texture)
 {
-    if (!normals_)
-    {
+    if (!normals_) {
         normals_ = std::make_unique<Vec2f[]>(sprites_.size() * 4_z);
         array_.reconfigure([this] { bind_arrays(); });
     }
@@ -64,8 +63,7 @@ void SpriteBatch::bring_to_front(uint32_t i)
 
 auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
 {
-    if (count_ == sprites_.size())
-    {
+    if (count_ == sprites_.size()) {
         LOGW(
             "Tried to add a sprite (size: %ux%u) to a full SpriteBatch "
             "(capacity: %u). Increase the capacity and try again.",
@@ -92,10 +90,8 @@ void SpriteBatch::erase(uint32_t i)
 auto SpriteBatch::find_sprite_by_id(int id) const -> SpriteRef
 {
     auto sprites = sprites_.data();
-    for (uint32_t i = 0; i < count_; ++i)
-    {
-        if (sprites[i].id() == id)
-        {
+    for (uint32_t i = 0; i < count_; ++i) {
+        if (sprites[i].id() == id) {
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
             return {*const_cast<SpriteBatch*>(this), sprites_.find_iterator(i)};
         }
@@ -127,28 +123,22 @@ void SpriteBatch::update(GameBase& context)
     auto sprites = sprites_.data();
     auto texture = context.texture_provider().raw_get(*texture_);
 
-    if (normals_)
-    {
+    if (normals_) {
         auto normal = context.texture_provider().raw_get(*normal_);
-        for (uint32_t i = 0; i < count_; ++i)
-        {
+        for (uint32_t i = 0; i < count_; ++i) {
             ArraySpan<Vec2f> normal_buffer{normals_.get() + i * 4, 4};
             ArraySpan<SpriteVertex> vertex_buffer{vertices_.get() + i * 4, 4};
             needs_update |= sprites[i].update(normal_buffer, normal) |
                             sprites[i].update(vertex_buffer, texture);
         }
-    }
-    else
-    {
-        for (uint32_t i = 0; i < count_; ++i)
-        {
+    } else {
+        for (uint32_t i = 0; i < count_; ++i) {
             ArraySpan<SpriteVertex> buffer{vertices_.get() + i * 4, 4};
             needs_update |= sprites[i].update(buffer, texture);
         }
     }
 
-    if (needs_update)
-    {
+    if (needs_update) {
         const uint32_t count = count_ * 4;
         vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
         if (normals_)
@@ -165,8 +155,7 @@ void SpriteBatch::bind_arrays() const
 
 void rainbow::graphics::draw(Context& context, const SpriteBatch& batch)
 {
-    if (batch.texture() == nullptr)
-    {
+    if (batch.texture() == nullptr) {
         R_ASSERT(batch.texture() != nullptr,  //
                  "Cannot draw an untextured SpriteBatch");
         return;

@@ -11,8 +11,7 @@ namespace rainbow
 {
     /// <summary>Structure for storing a three-dimensional vector.</summary>
     template <typename T>
-    struct Vec3
-    {
+    struct Vec3 {
         T x, y, z;  // NOLINT(misc-non-private-member-variables-in-classes)
 
         Vec3() : Vec3(0, 0, 0) {}
@@ -20,12 +19,9 @@ namespace rainbow
 
         [[nodiscard]] auto is_zero() const -> bool
         {
-            if constexpr (std::is_integral_v<T>)
-            {
+            if constexpr (std::is_integral_v<T>) {
                 return x == 0 && y == 0 && z == 0;
-            }
-            else
-            {
+            } else {
                 return are_equal<T>(0.0, x) && are_equal<T>(0.0, y) &&
                        are_equal<T>(0.0, z);
             }

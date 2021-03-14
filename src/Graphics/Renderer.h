@@ -19,8 +19,7 @@ namespace rainbow::graphics
     /// <summary>Hard-coded limit on number of sprites.</summary>
     static constexpr size_t kMaxSprites = 4096;
 
-    struct Context
-    {
+    struct Context {
         float scale = 1.0F;
         float zoom = 1.0F;
         Vec2i origin;
@@ -37,8 +36,7 @@ namespace rainbow::graphics
         auto initialize() -> std::error_code;
     };
 
-    struct MemoryInfo
-    {
+    struct MemoryInfo {
         int current_available;
         int total_available;
     };
@@ -92,8 +90,7 @@ namespace rainbow::graphics
     };
 
     template <int GL_STATE>
-    struct ScopedState
-    {
+    struct ScopedState {
         ScopedState() { glEnable(GL_STATE); }
         ~ScopedState() { glDisable(GL_STATE); }
     };

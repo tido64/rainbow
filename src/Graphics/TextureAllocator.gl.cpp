@@ -43,8 +43,7 @@ namespace
 {
     constexpr auto texture_filter(Filter filter) -> int
     {
-        switch (filter)
-        {
+        switch (filter) {
             case Filter::Nearest:
                 return GL_NEAREST;
 
@@ -59,8 +58,7 @@ namespace
 
     auto texture_format(const Image& image) -> std::tuple<GLenum, GLenum>
     {
-        switch (image.format)
-        {
+        switch (image.format) {
             case Image::Format::Unknown:
                 R_ASSERT(false, "Unknown image format");
                 return std::make_tuple(GL_RGBA8, GL_RGBA);
@@ -98,9 +96,8 @@ namespace
                         ? image.depth == 2  //
                               ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
                               : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG
-                        : image.depth == 2
-                              ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
-                              : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG,
+                    : image.depth == 2 ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+                                       : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG,
                     GL_NONE);
 
             case Image::Format::RGBA:
@@ -109,8 +106,7 @@ namespace
             case Image::Format::PNG:
                 [[fallthrough]];
             case Image::Format::SVG:
-                switch (image.channels)
-                {
+                switch (image.channels) {
                     case 1:
                         R_ASSERT(image.depth == 8, kInvalidColorDepth);
                         return std::make_tuple(GL_LUMINANCE, GL_LUMINANCE);
@@ -151,15 +147,13 @@ namespace
         static auto bound_unit = 0U;
         static auto bound_textures = std::array<GLuint, 32>{};
 
-        if (unit != bound_unit)
-        {
+        if (unit != bound_unit) {
             bound_unit = unit;
             glActiveTexture(GL_TEXTURE0 + unit);
         }
 
         auto id = texture_id(handle);
-        if (id != bound_textures[unit])
-        {
+        if (id != bound_textures[unit]) {
             bound_textures[unit] = id;
             glBindTexture(GL_TEXTURE_2D, id);
         }
@@ -203,8 +197,7 @@ void TextureAllocator::update(const TextureHandle& handle,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     auto [internal_format, format] = texture_format(image);
-    switch (image.format)
-    {
+    switch (image.format) {
         case Image::Format::Unknown:
             break;
 

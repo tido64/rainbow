@@ -14,10 +14,8 @@ namespace rainbow
 {
     class Data;
 
-    struct Image : private NonCopyable<Image>
-    {
-        enum class Format
-        {
+    struct Image : private NonCopyable<Image> {
+        enum class Format {
             Unknown,
             ATITC,  // Adreno
             BC1,    // DXT1
@@ -87,8 +85,7 @@ namespace rainbow
 
         ~Image()
         {
-            switch (format)
-            {
+            switch (format) {
                 case Format::ATITC:
                 case Format::BC1:
                 case Format::BC2:

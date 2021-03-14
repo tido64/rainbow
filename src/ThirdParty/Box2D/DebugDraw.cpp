@@ -44,8 +44,7 @@ namespace b2
         SetFlags(b2Draw::e_shapeBit);
         std::fill(std::begin(worlds_), std::end(worlds_), nullptr);
 
-        if (g_debug_draw_program == 0)
-        {
+        if (g_debug_draw_program == 0) {
             Shader::Params shaders[]{
                 rainbow::graphics::gl::Simple2D_vert(),
                 rainbow::graphics::gl::Simple_frag(),
@@ -104,16 +103,14 @@ namespace b2
     {
         if (std::none_of(std::begin(worlds_),
                          std::end(worlds_),
-                         [](const DebuggableWorld* world) { return world; }))
-        {
+                         [](const DebuggableWorld* world) { return world; })) {
             return;
         }
 
         auto context = ShaderManager::Get()->use_scoped(g_debug_draw_program);
         g_debug_draw_vao.bind();
         glBindBuffer(GL_ARRAY_BUFFER, g_debug_draw_buffer);  // For uploading.
-        for (auto world : worlds_)
-        {
+        for (auto world : worlds_) {
             if (world == nullptr)
                 break;
 
@@ -137,8 +134,7 @@ namespace b2
                                 const b2Color& color)
     {
         b2Vec2 p0 = ptm_ * vertices[vertex_count - 1];
-        for (int32 i = 0; i < vertex_count; ++i)
-        {
+        for (int32 i = 0; i < vertex_count; ++i) {
             const b2Vec2 p1 = ptm_ * vertices[i];
             lines_.emplace_back(color, p0);
             lines_.emplace_back(color, p1);
@@ -151,8 +147,7 @@ namespace b2
                                      const b2Color& color)
     {
         const b2Color c(color.r, color.g, color.b, 0.5f);
-        for (int32 i = 1; i < vertex_count - 1; ++i)
-        {
+        for (int32 i = 1; i < vertex_count - 1; ++i) {
             triangles_.emplace_back(c, ptm_ * vertices[0]);
             triangles_.emplace_back(c, ptm_ * vertices[i]);
             triangles_.emplace_back(c, ptm_ * vertices[i + 1]);

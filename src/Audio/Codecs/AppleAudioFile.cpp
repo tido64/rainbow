@@ -35,17 +35,20 @@ AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
 {
     const auto path = filesystem::real_path(file);
     const auto url = make_url(path);
-    if (ExtAudioFileOpenURL(url, &ref_) != noErr)
+    if (ExtAudioFileOpenURL(url, &ref_) != noErr) {
         LOGE("AudioToolbox: Failed to open '%s'", file);
+    }
     CFRelease(url);
-    if (ref_ == nullptr)
+    if (ref_ == nullptr) {
         return;
+    }
 
     UInt32 size = sizeof(format_);
     auto result = ExtAudioFileGetProperty(
         ref_, kExtAudioFileProperty_FileDataFormat, &size, &format_);
-    if (result != noErr)
+    if (result != noErr) {
         LOGE("AudioToolbox: Failed to retrieve audio format.");
+    }
 
     FillOutASBDForLPCM(  //
         format_,
@@ -61,14 +64,16 @@ AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
         kExtAudioFileProperty_ClientDataFormat,
         sizeof(format_),
         &format_);
-    if (result != noErr)
+    if (result != noErr) {
         LOGE("AudioToolbox: Failed to set client data format.");
+    }
 }
 
 AppleAudioFile::~AppleAudioFile()
 {
-    if (ref_ != nullptr)
+    if (ref_ != nullptr) {
         ExtAudioFileDispose(ref_);
+    }
 }
 
 auto AppleAudioFile::size() const -> size_t
@@ -77,8 +82,7 @@ auto AppleAudioFile::size() const -> size_t
     UInt32 size = sizeof(frames);
     const auto result = ExtAudioFileGetProperty(
         ref_, kExtAudioFileProperty_FileLengthFrames, &size, &frames);
-    if (result != noErr)
-    {
+    if (result != noErr) {
         LOGE("AudioToolbox: Failed to retrieve audio length.");
         return 0;
     }
@@ -94,8 +98,9 @@ auto AppleAudioFile::read(void* dst, size_t size) -> size_t
     buffer.mBuffers[0].mNumberChannels = format_.mChannelsPerFrame;
     buffer.mBuffers[0].mDataByteSize = size;
     buffer.mBuffers[0].mData = dst;
-    if (ExtAudioFileRead(ref_, &frames, &buffer) != noErr)
+    if (ExtAudioFileRead(ref_, &frames, &buffer) != noErr) {
         LOGE("AudioToolbox: Failed to read <%p>", static_cast<void*>(ref_));
+    }
     return frames * static_cast<size_t>(format_.mBytesPerFrame);
 }
 

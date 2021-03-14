@@ -33,7 +33,9 @@ public:
 
     template <typename U,
               typename = std::enable_if<std::is_convertible_v<U, T>>>
-    NotNull(const NotNull<U>& other) : ptr_(other.get()) {}
+    NotNull(const NotNull<U>& other) : ptr_(other.get())
+    {
+    }
 
     auto get() const { return ptr_; }
 

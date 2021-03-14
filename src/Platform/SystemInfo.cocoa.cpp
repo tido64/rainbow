@@ -39,8 +39,7 @@ auto rainbow::system_info::locales() -> std::vector<std::string>
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     std::array<char, 16> tmp;
 
-    for (int i = 0; i < count; ++i)
-    {
+    for (int i = 0; i < count; ++i) {
         auto lang = static_cast<CFStringRef>(
             CFArrayGetValueAtIndex(preferred_langs, i));
         CFStringGetCString(lang, tmp.data(), tmp.size(), kCFStringEncodingUTF8);

@@ -10,8 +10,9 @@ using rainbow::graphics::ElementBuffer;
 
 ElementBuffer::~ElementBuffer()
 {
-    if (buffer_ == 0)
+    if (buffer_ == 0) {
         return;
+    }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glDeleteBuffers(1, &buffer_);

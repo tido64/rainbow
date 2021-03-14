@@ -67,8 +67,7 @@ namespace rainbow
 
         [[nodiscard]] auto find_iterator(size_type offset) const
         {
-            for (size_type i = 0; i < size(); ++i)
-            {
+            for (size_type i = 0; i < size(); ++i) {
                 if (index_of(i) == offset)
                     return i;
             }
@@ -85,15 +84,12 @@ namespace rainbow
             if (element_index == new_index)
                 return;
 
-            if (element_index < new_index)
-            {
+            if (element_index < new_index) {
                 const auto lower = element_index + 1;
                 rotate(element, lower, new_index, [lower](size_type i) {
                     return i - lower;
                 });
-            }
-            else
-            {
+            } else {
                 const auto upper = element_index - 1;
                 rotate(element, new_index, upper, [upper](size_type i) {
                     return upper - i;
@@ -153,14 +149,12 @@ namespace rainbow
 
             std::unique_ptr<size_type[]> scoped_buffer;
             auto sorted_indices = get_small_buffer<size_type>(count);
-            if (sorted_indices == nullptr)
-            {
+            if (sorted_indices == nullptr) {
                 scoped_buffer = std::make_unique<size_type[]>(count);
                 sorted_indices = scoped_buffer.get();
             }
 
-            for (size_type i = 0; i < size(); ++i)
-            {
+            for (size_type i = 0; i < size(); ++i) {
                 const auto j = index_of(i);
                 if (j < lower || j > upper)
                     continue;

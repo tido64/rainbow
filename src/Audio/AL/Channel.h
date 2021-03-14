@@ -14,8 +14,7 @@ namespace rainbow::audio
 {
     struct Sound;
 
-    struct Channel
-    {
+    struct Channel {
     public:
         static constexpr int kNumBuffers = 3;
 

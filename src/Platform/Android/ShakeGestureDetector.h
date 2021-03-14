@@ -51,17 +51,14 @@ namespace rainbow
                                      acceleration.y * acceleration.y +
                                      acceleration.z * acceleration.z);
             const auto mag = magnitude_ * 0.9F + (a - acceleration_);
-            if (mag > threshold_)
-            {
+            if (mag > threshold_) {
                 if (!is_shaking_)
                     on_shake_();
 
                 is_shaking_ = true;
                 last_shake_ = timestamp;
-            }
-            else if (is_shaking_ &&
-                     timestamp - last_shake_ > min_shake_duration_)
-            {
+            } else if (is_shaking_ &&
+                       timestamp - last_shake_ > min_shake_duration_) {
                 is_shaking_ = false;
             }
 

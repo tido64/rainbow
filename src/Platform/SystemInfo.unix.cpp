@@ -23,32 +23,26 @@ auto rainbow::system_info::has_touchscreen() -> bool
 auto rainbow::system_info::locales() -> std::vector<std::string>
 {
     czstring lc = setlocale(LC_ALL, nullptr);
-    if (lc == nullptr)
-    {
+    if (lc == nullptr) {
         lc = setlocale(LC_MESSAGES, nullptr);
-    }
-    else
-    {
+    } else {
         constexpr char kLCMessages[] = "LC_MESSAGES";
         czstring lc_msg = strstr(lc, kLCMessages);
-        if (lc_msg != nullptr)
+        if (lc_msg != nullptr) {
             lc = lc_msg + sizeof(kLCMessages);
+        }
     }
 
     std::vector<std::string> locales;
-    if (lc == nullptr || (lc[0] == 'C' && lc[1] == '\0'))
-    {
+    if (lc == nullptr || (lc[0] == 'C' && lc[1] == '\0')) {
         locales.emplace_back("en");
-    }
-    else
-    {
+    } else {
         czstring first = lc;
-        for (czstring c = first; *c != '\0'; ++c)
-        {
-            if (*c == ';')
-            {
-                if (c > first)
+        for (czstring c = first; *c != '\0'; ++c) {
+            if (*c == ';') {
+                if (c > first) {
                     locales.emplace_back(first, c);
+                }
                 first = c + 1;
             }
         }

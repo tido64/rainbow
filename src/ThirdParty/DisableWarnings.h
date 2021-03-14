@@ -23,5 +23,6 @@
 #elif defined(_MSC_VER)
 #    pragma warning(push)
 #    pragma warning(disable : 4702)  // unreachable code
-#    pragma warning(disable : 5054)  // operator '|': deprecated between enumerations of different types
+#    pragma warning(disable : 5054)  // operator '|': deprecated between
+                                     // enumerations of different types
 #endif

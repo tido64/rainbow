@@ -12,8 +12,7 @@
 
 using rainbow::audio::ALMixer;
 
-@implementation RainbowAudioSession
-{
+@implementation RainbowAudioSession {
     ALMixer* _mixer;
 }
 
@@ -35,8 +34,7 @@ using rainbow::audio::ALMixer;
     AVAudioSession* audioSession = [AVAudioSession sharedInstance];
     NSError* error = nil;
     BOOL success = [audioSession setCategory:category error:&error];
-    if (success && category == AVAudioSessionCategoryPlayAndRecord)
-    {
+    if (success && category == AVAudioSessionCategoryPlayAndRecord) {
         success = [audioSession
             overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker
                               error:&error];
@@ -50,8 +48,7 @@ using rainbow::audio::ALMixer;
 
 - (instancetype)initWithMixer:(ALMixer*)mixer
 {
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         _mixer = mixer;
 
         [[NSNotificationCenter defaultCenter]
@@ -82,8 +79,7 @@ using rainbow::audio::ALMixer;
 {
     NSNumber* interuptionType =
         notification.userInfo[AVAudioSessionInterruptionTypeKey];
-    switch (interuptionType.unsignedIntegerValue)
-    {
+    switch (interuptionType.unsignedIntegerValue) {
         case AVAudioSessionInterruptionTypeBegan:
             _mixer->suspend(true);
             break;

@@ -7,8 +7,8 @@
 #include "Platform/Macros.h"
 #ifdef RAINBOW_SDL
 
-#include <SDL_config.h>
-#include <SDL_keyboard.h>
+#    include <SDL_config.h>
+#    include <SDL_keyboard.h>
 
 using rainbow::KeyStroke;
 using rainbow::VirtualKey;
@@ -20,8 +20,7 @@ auto rainbow::to_keycode(VirtualKey vkey) -> int
 
 auto rainbow::to_scancode(VirtualKey vkey) -> int
 {
-    switch (vkey)
-    {
+    switch (vkey) {
         case VirtualKey::A:
             return SDL_SCANCODE_A;
         case VirtualKey::B:
@@ -270,8 +269,7 @@ auto rainbow::to_scancode(VirtualKey vkey) -> int
 template <>
 auto rainbow::to_virtualkey(const SDL_Keysym& keysym) -> VirtualKey
 {
-    switch (keysym.scancode)
-    {
+    switch (keysym.scancode) {
         case SDL_SCANCODE_A:
             return VirtualKey::A;
         case SDL_SCANCODE_B:
@@ -523,22 +521,30 @@ template <>
 auto rainbow::KeyStroke::from_event(const SDL_Keysym& keysym) -> KeyStroke
 {
     uint32_t mods{};
-    if ((keysym.mod & KMOD_LSHIFT) != 0)
+    if ((keysym.mod & KMOD_LSHIFT) != 0) {
         mods |= KeyMods::LeftShift;
-    if ((keysym.mod & KMOD_RSHIFT) != 0)
+    }
+    if ((keysym.mod & KMOD_RSHIFT) != 0) {
         mods |= KeyMods::RightShift;
-    if ((keysym.mod & KMOD_LCTRL) != 0)
+    }
+    if ((keysym.mod & KMOD_LCTRL) != 0) {
         mods |= KeyMods::LeftCtrl;
-    if ((keysym.mod & KMOD_RCTRL) != 0)
+    }
+    if ((keysym.mod & KMOD_RCTRL) != 0) {
         mods |= KeyMods::RightCtrl;
-    if ((keysym.mod & KMOD_LALT) != 0)
+    }
+    if ((keysym.mod & KMOD_LALT) != 0) {
         mods |= KeyMods::LeftAlt;
-    if ((keysym.mod & KMOD_RALT) != 0)
+    }
+    if ((keysym.mod & KMOD_RALT) != 0) {
         mods |= KeyMods::RightAlt;
-    if ((keysym.mod & KMOD_LGUI) != 0)
+    }
+    if ((keysym.mod & KMOD_LGUI) != 0) {
         mods |= KeyMods::LeftSuper;
-    if ((keysym.mod & KMOD_RGUI) != 0)
+    }
+    if ((keysym.mod & KMOD_RGUI) != 0) {
         mods |= KeyMods::RightSuper;
+    }
     return {to_virtualkey(keysym), mods};
 }
 

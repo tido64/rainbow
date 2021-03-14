@@ -74,8 +74,7 @@ void Animation::update(uint64_t dt)
         return;
 
     accumulated_ += std::min<uint32_t>(dt, interval_ * 5);
-    while (accumulated_ >= interval_)
-    {
+    while (accumulated_ >= interval_) {
         // Consume first as |accumulated_| may be reset during a tick, leading
         // to an underflow.
         accumulated_ -= interval_;
@@ -93,32 +92,28 @@ void Animation::set_current_frame()
 
 void Animation::tick()
 {
-    if (frames_[frame_ + 1] == end_frame())
-    {
-        if (delay_ < 0)
-        {
+    if (frames_[frame_ + 1] == end_frame()) {
+        if (delay_ < 0) {
             stop();
             return;
         }
-        if (idled_ == 0 && callback_)
-        {
+        if (idled_ == 0 && callback_) {
             callback_(this, AnimationEvent::Complete);
-            if (is_stopped())
+            if (is_stopped()) {
                 return;
+            }
         }
-        if (idled_ < delay_)
-        {
+        if (idled_ < delay_) {
             ++idled_;
             return;
         }
         frame_ = 0;
         idled_ = 0;
-    }
-    else
-    {
+    } else {
         ++frame_;
-        if (callback_)
+        if (callback_) {
             callback_(this, AnimationEvent::Frame);
+        }
     }
     sprite_->texture(frames_[frame_]);
 }

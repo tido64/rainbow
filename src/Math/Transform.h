@@ -61,16 +61,13 @@ namespace rainbow
                    const Vec2<Float>& scale,
                    const ArraySpan<Vertex>& data)
     {
-        if (!is_almost_zero(angle))
-        {
+        if (!is_almost_zero(angle)) {
             transform(quad,
                       position,
                       std::sin(-angle) * scale,
                       std::cos(-angle) * scale,
                       data);
-        }
-        else
-        {
+        } else {
             transform(quad, position, scale, data);
         }
     }

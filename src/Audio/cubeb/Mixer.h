@@ -24,15 +24,13 @@ namespace rainbow::audio
 {
     class CubebMixer;
 
-    enum class ChannelState
-    {
+    enum class ChannelState {
         Stopped,
         Playing,
         Paused,
     };
 
-    struct Channel
-    {
+    struct Channel {
         cubeb_stream* stream;
         std::unique_ptr<IAudioFile> source;
         intptr_t source_index;

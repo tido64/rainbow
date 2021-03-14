@@ -32,8 +32,9 @@ Buffer::Buffer(Buffer&& buffer) noexcept : id_(buffer.id_)
 
 Buffer::~Buffer()
 {
-    if (id_ == 0)
+    if (id_ == 0) {
         return;
+    }
 
     glDeleteBuffers(1, &id_);
 }

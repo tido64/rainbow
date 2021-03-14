@@ -16,8 +16,7 @@ namespace rainbow
     template <typename T>
     class BoundedPool
     {
-        struct Item
-        {
+        struct Item {
             T item;
             int next_free;
         };

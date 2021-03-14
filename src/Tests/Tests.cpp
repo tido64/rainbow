@@ -21,8 +21,7 @@ using rainbow::out;
 
 namespace
 {
-    struct CoLibrary
-    {
+    struct CoLibrary {
         CoLibrary() { CoInitializeEx(nullptr, COINIT_MULTITHREADED); }
         ~CoLibrary() { CoUninitialize(); }
     };
@@ -50,8 +49,7 @@ bool rainbow::should_run_tests([[maybe_unused]] out<int> argc,
     std::string_view first_flag(argv[1]);
 
     // Check for --test flag.
-    if (first_flag == "--test"sv)
-    {
+    if (first_flag == "--test"sv) {
         --argc;
         ++argv;
         return true;

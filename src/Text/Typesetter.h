@@ -19,14 +19,12 @@ struct hb_buffer_t;
 
 namespace rainbow
 {
-    struct GlyphPosition
-    {
+    struct GlyphPosition {
         uint32_t glyph_index = 0;
         Vec2f position;
     };
 
-    struct TextAttributes
-    {
+    struct TextAttributes {
         const std::string& font_face;
         int font_size;
         TextAlignment text_alignment;

@@ -30,8 +30,7 @@ namespace
 
         ~MonospaceFont()
         {
-            if (file_ != nullptr)
-            {
+            if (file_ != nullptr) {
                 fclose(file_);
             }
         }
@@ -56,12 +55,14 @@ auto rainbow::text::monospace_font() -> Data
     MonospaceFont font;
 
     const auto size = font.file_size();
-    if (size == 0)
+    if (size == 0) {
         return {};
+    }
 
     auto buffer = std::make_unique<uint8_t[]>(size);
-    if (fread(buffer.get(), sizeof(uint8_t), size, font) != size)
+    if (fread(buffer.get(), sizeof(uint8_t), size, font) != size) {
         return {};
+    }
 
     return {buffer.release(), size, Data::Ownership::Owner};
 }
@@ -78,8 +79,7 @@ auto rainbow::text::monospace_font_path() -> czstring
         "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
         "/usr/share/fonts/TTF/DejaVuSansMono.ttf",
     };
-    for (auto path : fonts)
-    {
+    for (auto path : fonts) {
         if (system::is_regular_file(path))
             return path;
     }

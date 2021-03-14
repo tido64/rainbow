@@ -36,8 +36,9 @@ auto Label::alignment(TextAlignment a) -> Label&
 
 auto Label::angle(float r) -> Label&
 {
-    if (are_equal(r, angle_))
+    if (are_equal(r, angle_)) {
         return *this;
+    }
 
     angle_ = r;
     set_needs_update(kStaleBuffer);
@@ -82,8 +83,9 @@ auto Label::position(Vec2f position) -> Label&
 
 auto Label::scale(float f) -> Label&
 {
-    if (are_equal(f, scale_))
+    if (are_equal(f, scale_)) {
         return *this;
+    }
 
     constexpr auto min_scale = 0.01F;
     scale_ = std::clamp(f, min_scale, 1.0F);
@@ -100,8 +102,7 @@ auto Label::text(czstring text) -> Label&
 
 void Label::update(GameBase& context)
 {
-    if (stale_ != 0)
-    {
+    if (stale_ != 0) {
         update_internal(context);
         upload();
         clear_state();
@@ -110,20 +111,19 @@ void Label::update(GameBase& context)
 
 void Label::update_internal(GameBase& context)
 {
-    if ((stale_ & kStaleBuffer) != 0)
-    {
+    if ((stale_ & kStaleBuffer) != 0) {
         vertices_ = context.typesetter().draw_text(
             text_,
             position_,
             TextAttributes{font_face_, font_size_, alignment_},
             &size_);
-        for (auto&& vx : vertices_)
+        for (auto&& vx : vertices_) {
             vx.color = color_;
-    }
-    else if ((stale_ & kStaleColor) != 0)
-    {
-        for (auto&& vx : vertices_)
+        }
+    } else if ((stale_ & kStaleColor) != 0) {
+        for (auto&& vx : vertices_) {
             vx.color = color_;
+        }
     }
 }
 

@@ -9,8 +9,7 @@
 
 namespace rainbow
 {
-    enum class ErrorCode
-    {
+    enum class ErrorCode {
         Success,
         AudioInitializationFailed,
         GLInitializationFailed,
@@ -26,8 +25,7 @@ namespace rainbow
 namespace std
 {
     template <>
-    struct is_error_code_enum<rainbow::ErrorCode> : true_type
-    {
+    struct is_error_code_enum<rainbow::ErrorCode> : true_type {
     };
 }  // namespace std
 

@@ -11,8 +11,7 @@ namespace rainbow
 {
     /// <summary>Structure for storing a two-dimensional vector.</summary>
     template <typename T>
-    struct Vec2
-    {
+    struct Vec2 {
         using value_type = T;
 
         /// <summary>
@@ -90,13 +89,10 @@ namespace rainbow
 
         [[nodiscard]] auto normalize() const
         {
-            if constexpr (std::is_integral_v<T>)
-            {
+            if constexpr (std::is_integral_v<T>) {
                 const float h = std::sqrt(x * x + y * y);
                 return Vec2<float>{x / h, y / h};
-            }
-            else
-            {
+            } else {
                 const value_type h = std::sqrt(x * x + y * y);
                 return Vec2{x / h, y / h};
             }

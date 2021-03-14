@@ -27,10 +27,9 @@ namespace rainbow::graphics
     class ShaderManager : public Global<ShaderManager>
     {
     public:
-        enum
-        {
+        enum {
             kInvalidProgram,
-            kDefaultProgram
+            kDefaultProgram,
         };
 
         /// <summary>

@@ -120,8 +120,7 @@ namespace rainbow::duk
                 duk::get_prop_literal(ctx, 0, DUKR_HIDDEN_SYMBOL_TYPE);
                 const auto type = duk_require_pointer(ctx, -1);
 
-                if (type == type_id<audio::Channel>().value())
-                {
+                if (type == type_id<audio::Channel>().value()) {
                     auto channel =
                         duk::get_pointer<audio::Channel, false>(ctx, 0);
                     auto ch = audio::play(channel);
@@ -129,8 +128,7 @@ namespace rainbow::duk
                     return 1;
                 }
 
-                if (type == type_id<audio::Sound>().value())
-                {
+                if (type == type_id<audio::Sound>().value()) {
                     auto sound = duk::get_pointer<audio::Sound, false>(ctx, 0);
                     auto channel = audio::play(sound);
                     duk::push(ctx, channel);

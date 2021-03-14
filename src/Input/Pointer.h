@@ -10,8 +10,7 @@
 namespace rainbow
 {
     /// <summary>A pointer event.</summary>
-    struct Pointer
-    {
+    struct Pointer {
         /// <summary>Unique hash value for each pointer.</summary>
         uint32_t hash;
 

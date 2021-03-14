@@ -6,19 +6,19 @@
 
 #ifdef USE_HEIMDALL
 
-#include <numeric>
+#    include <numeric>
 
-#include "Common/TypeCast.h"
-#include "Graphics/Animation.h"
-#include "Graphics/Label.h"
-#include "Graphics/SpriteBatch.h"
-#include "Script/GameBase.h"
-#include "ThirdParty/ImGui/ImGuiHelper.h"
+#    include "Common/TypeCast.h"
+#    include "Graphics/Animation.h"
+#    include "Graphics/Label.h"
+#    include "Graphics/SpriteBatch.h"
+#    include "Script/GameBase.h"
+#    include "ThirdParty/ImGui/ImGuiHelper.h"
 
-#define BRIEF(type, properties) "(" #type ") " properties
-#define ONLY_TAG(type) BRIEF(type, "tag=\"%s\"")
-#define WITH_TAG(type, properties) BRIEF(type, properties " tag=\"%s\"")
-#define WRITE_PROP(obj, prop) write_prop(#prop, (obj).prop())
+#    define BRIEF(type, properties) "(" #    type ") " properties
+#    define ONLY_TAG(type) BRIEF(type, "tag=\"%s\"")
+#    define WITH_TAG(type, properties) BRIEF(type, properties " tag=\"%s\"")
+#    define WRITE_PROP(obj, prop) write_prop(#    prop, (obj).prop())
 
 using heimdall::Overlay;
 using rainbow::Animation;
@@ -40,18 +40,15 @@ namespace
     constexpr uint64_t kStartUpMessageMaxDuration = 8000;
     constexpr float kStyleFontSize = 13.0F;
     constexpr float kStylePlotHeight = 100.0F;
-#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_IOS)
+#    if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_IOS)
     constexpr float kStyleScreenHeight = 600.0F;
-#else
+#    else
     constexpr float kStyleScreenHeight = 1200.0F;
-#endif
+#    endif
     constexpr float kStyleWindowWidth = 400.0F;
     constexpr float kStyleWindowHeight = 400.0F;
 
-    void write_address(const void* obj)
-    {
-        ImGui::Text("address = %p", obj);
-    }
+    void write_address(const void* obj) { ImGui::Text("address = %p", obj); }
 
     void write_prop(std::string_view property, std::string_view value)
     {
@@ -115,8 +112,7 @@ namespace
                             BRIEF(Sprite, "id=%i width=%u height=%u"),
                             sprite.id(),
                             sprite.width(),
-                            sprite.height()))
-        {
+                            sprite.height())) {
             write_address(&sprite);
             WRITE_PROP(sprite, position);
             WRITE_PROP(sprite, color);
@@ -158,8 +154,7 @@ namespace
             *std::max_element(std::begin(container), std::end(container)))));
     }
 
-    struct CreateNode
-    {
+    struct CreateNode {
         czstring tag;  // NOLINT
 
         void operator()(Animation* animation) const
@@ -168,8 +163,7 @@ namespace
                                 WITH_TAG(Animation, "%s frame=%u"),
                                 animation->is_stopped() ? "stopped" : "playing",
                                 animation->current_frame(),
-                                tag))
-            {
+                                tag)) {
                 write_address(animation);
                 WRITE_PROP(*animation, frame_rate);
                 create_node(*animation->sprite());
@@ -180,8 +174,7 @@ namespace
         void operator()(Label* label) const
         {
             if (ImGui::TreeNode(
-                    label, WITH_TAG(Label, "%s"), label->text(), tag))
-            {
+                    label, WITH_TAG(Label, "%s"), label->text(), tag)) {
                 write_address(label);
                 WRITE_PROP(*label, position);
                 WRITE_PROP(*label, font);
@@ -196,8 +189,7 @@ namespace
             if (ImGui::TreeNode(batch,
                                 WITH_TAG(SpriteBatch, "size=%u"),
                                 batch->size(),
-                                tag))
-            {
+                                tag)) {
                 write_address(batch);
                 WRITE_PROP(*batch, texture);
                 WRITE_PROP(*batch, normal);
@@ -213,8 +205,7 @@ namespace
         template <typename T>
         void operator()(T&& drawable) const
         {
-            if (ImGui::TreeNode(drawable, ONLY_TAG(IDrawable), tag))
-            {
+            if (ImGui::TreeNode(drawable, ONLY_TAG(IDrawable), tag)) {
                 write_address(drawable);
                 ImGui::TreePop();
             }
@@ -246,8 +237,7 @@ void Overlay::draw_menu_bar()
     if (!ImGui::BeginMenuBar())
         return;
 
-    if (ImGui::BeginMenu("Debug"))
-    {
+    if (ImGui::BeginMenu("Debug")) {
         if (ImGui::MenuItem("Restart"))
             director_.restart();
         ImGui::EndMenu();
@@ -261,8 +251,7 @@ void Overlay::draw_performance(float scale)
 
     if (!ImGui::CollapsingHeader("Performance",
                                  ImGuiTreeNodeFlags_NoAutoOpenOnLog |
-                                     ImGuiTreeNodeFlags_DefaultOpen))
-    {
+                                     ImGuiTreeNodeFlags_DefaultOpen)) {
         return;
     }
 
@@ -311,17 +300,13 @@ void Overlay::draw_performance(float scale)
     ImGui::TextWrapped("Renderer: %s", graphics::renderer());
 
     const auto meminfo = graphics::memory_info();
-    if (meminfo.current_available > 0)
-    {
-        if (meminfo.total_available > 0)
-        {
+    if (meminfo.current_available > 0) {
+        if (meminfo.total_available > 0) {
             ImGui::TextWrapped(  //
                 "Video memory: %i / %i kB free",
                 meminfo.current_available,
                 meminfo.total_available);
-        }
-        else
-        {
+        } else {
             ImGui::TextWrapped(
                 "Video memory: %i kB free", meminfo.current_available);
         }
@@ -340,8 +325,7 @@ void Overlay::draw_render_queue(GameBase& context)
                            kCollapsingHeaderFlags,
                            "Render Queue (%zu unit%s)",
                            render_queue.size(),
-                           render_queue.size() == 1 ? "" : "s"))
-    {
+                           render_queue.size() == 1 ? "" : "s")) {
         return;
     }
 
@@ -361,8 +345,7 @@ void Overlay::draw_startup_message()
     ImGui::SetNextWindowPos({4.0F, 4.0F}, ImGuiCond_Once);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
 
-    if (ImGui::Begin("Help", nullptr, kMinimalWindowFlags))
-    {
+    if (ImGui::Begin("Help", nullptr, kMinimalWindowFlags)) {
         const ImVec4 yellow = Color{0xff, 0xeb, 0x3b};
         ImGui::TextColored(yellow, RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS ".");
     }
@@ -393,10 +376,8 @@ void Overlay::update_impl(GameBase& context, uint64_t dt)
     vmem_usage_.pop_front();
     vmem_usage_.push_back(used * 1e-6);
 
-    if (!is_enabled())
-    {
-        if (startup_message_duration < kStartUpMessageMaxDuration)
-        {
+    if (!is_enabled()) {
+        if (startup_message_duration < kStartUpMessageMaxDuration) {
             startup_message_duration += dt;
 
             rainbow::imgui::new_frame(director_.graphics_context(), dt);
@@ -411,16 +392,14 @@ void Overlay::update_impl(GameBase& context, uint64_t dt)
     rainbow::imgui::new_frame(director_.graphics_context(), dt);
     if (ImGui::Begin("Rainbow (built " __DATE__ ")",
                      &enabled_,
-                     rainbow::imgui::kDefaultWindowFlags))
-    {
+                     rainbow::imgui::kDefaultWindowFlags)) {
         draw_menu_bar();
 
         const float scale =
             ImGui::GetIO().Fonts->Fonts[0]->FontSize / kStyleFontSize;
         const ImVec2 window_size{
             kStyleWindowWidth * scale, kStyleWindowHeight * scale};
-        if (ImGui::BeginChild("Body", window_size))
-        {
+        if (ImGui::BeginChild("Body", window_size)) {
             draw_performance(scale);
             draw_render_queue(context);
         }

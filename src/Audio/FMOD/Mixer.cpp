@@ -43,8 +43,7 @@ namespace
 #else
         const auto p = rainbow::filesystem::relative(path);
         std::error_code error;
-        if (!rainbow::filesystem::is_regular_file(p, error))
-        {
+        if (!rainbow::filesystem::is_regular_file(p, error)) {
             R_ABORT("No such file: %s", path);
             UNREACHABLE();
             return nullptr;
@@ -55,8 +54,7 @@ namespace
 
         FMOD::Sound* sound;
         auto result = create(asset, FMOD_DEFAULT, nullptr, &sound);
-        if (is_fail(result))
-        {
+        if (is_fail(result)) {
             log_error(result);
             return nullptr;
         }
@@ -91,16 +89,14 @@ bool FMODMixer::initialize(int max_channels)
     R_ASSERT(fmod_system == nullptr, "FMOD system is already initialised");
 
     auto result = FMOD::Studio::System::create(&fmod_studio);
-    if (is_fail(result))
-    {
+    if (is_fail(result)) {
         log_error(result);
         return false;
     }
 
     result = fmod_studio->initialize(
         max_channels, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, nullptr);
-    if (is_fail(result))
-    {
+    if (is_fail(result)) {
         log_error(result);
         return false;
     }
@@ -232,8 +228,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
     FMOD::Channel* channel;
     auto result =
         fmod_system->playSound(from_opaque(sound), nullptr, false, &channel);
-    if (is_fail(result))
-    {
+    if (is_fail(result)) {
         log_error(result);
         return nullptr;
     }

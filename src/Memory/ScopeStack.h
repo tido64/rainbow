@@ -37,7 +37,8 @@ namespace rainbow
         LinearAllocator(size_t size)
             : block_(std::make_unique<uint8_t[]>(size)), end_(block_.get())
 #ifndef NDEBUG
-            , size_(size)
+              ,
+              size_(size)
 #endif
         {
         }
@@ -101,8 +102,7 @@ namespace rainbow
 
         void reset()
         {
-            while (blocks_ != nullptr)
-            {
+            while (blocks_ != nullptr) {
                 (*blocks_->destructor)(address_of(blocks_));
                 blocks_ = blocks_->next;
             }
@@ -116,8 +116,7 @@ namespace rainbow
             static_cast<T*>(ptr)->~T();
         }
 
-        struct BlockHeader
-        {
+        struct BlockHeader {
             void (*destructor)(void*);
             BlockHeader* next;
         };
