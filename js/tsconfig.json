@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "sourceMap": true,
+    "target": "ES5",
+    "strict": true,
+    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "sourceMap": true,
-    "strict": true
+    "resolveJsonModule": true
   },
   "files": ["index.ts"]
 }

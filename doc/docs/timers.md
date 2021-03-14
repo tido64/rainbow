@@ -14,13 +14,13 @@ error.
 
 To access the timer manager, use the static `Get()` method:
 
-```c++
+```cpp
 TimerManager* timer_manager = TimerManager::Get();
 ```
 
 ### Creating and Clearing Timers
 
-```c++
+```cpp
 auto TimerManager::set_timer(Timer::Closure,
                              const int interval,
                              const int repeat_count) -> Timer*;
@@ -40,7 +40,7 @@ resumed but the repeat count will not be restored.
 
 ### Pausing and Resuming Timers
 
-```c++
+```cpp
 void Timer::pause();
 void Timer::resume();
 ```
@@ -49,26 +49,26 @@ Pausing a timer will freeze it in its current state until it is resumed.
 
 ### Timer Information
 
-```c++
+```cpp
 auto Timer::is_active() const -> bool;
 ```
 
 Returns whether the timer is currently active. This method returns `true` while
 the timer is running normally, and `false` otherwise.
 
-```c++
+```cpp
 auto Timer::elapsed() const -> int;
 ```
 
 Returns the elapsed time.
 
-```c++
+```cpp
 auto Timer::interval() const -> int;
 ```
 
 Returns the timer's delay/interval in milliseconds.
 
-```c++
+```cpp
 auto Timer::repeat_count() const -> int;
 ```
 
@@ -83,7 +83,7 @@ a 500 ms delay. We use a freestanding function, a functor, a lambda function,
 and a bound member function to create them. For simplicity's sake, we only clear
 the first repeated timer.
 
-```c++
+```cpp
 #include <functional>
 
 #include "Script/GameBase.h"

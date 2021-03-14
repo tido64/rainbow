@@ -219,3 +219,6 @@ jobs:
       run: |
         yarn --frozen-lockfile --non-interactive
         yarn build:ci
+    - name: Build documentation
+      run: |
+        yarn build:doc

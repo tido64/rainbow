@@ -3,6 +3,9 @@ id: getting-started
 title: Getting Started
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 ## Download the Source Code
 
 First, make sure you've installed [Git](https://git-scm.com/downloads) as that's
@@ -14,7 +17,20 @@ download Rainbow and all of its submodules into a folder named `rainbow`:
 If you're using a graphical UI for Git, make sure to checkout the submodules as
 well.
 
-## Building for Windows
+## Building
+
+<Tabs
+  groupId="target-os"
+  defaultValue="windows"
+  values={[
+    { label: "Windows", value: "windows", },
+    { label: "macOS", value: "macos", },
+    { label: "Linux", value: "linux", },
+    { label: "Android", value: "android", },
+    { label: "iOS", value: "ios", },
+  ]}
+>
+<TabItem value="windows">
 
 1. Install [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/).
 
@@ -58,7 +74,8 @@ well.
 5. When Visual Studio opens the project, right-click on `rainbow` and select
    `Set as StartUp Project`. Then hit `F5` to build and run.
 
-## Building for macOS
+</TabItem>
+<TabItem value="macos">
 
 1. Install [Xcode](https://apps.apple.com/app/xcode/id497799835?mt=12) from App Store.
 
@@ -88,23 +105,34 @@ well.
 
 You'll find an overview of configuration and feature flags further below.
 
-## Building for Linux
+</TabItem>
+<TabItem value="linux">
 
 1. Use your distro's package manager to install the dependencies:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="linux-distro"
+  defaultValue="archlinux"
+  values={[
+    { label: "ArchLinux", value: "archlinux", },
+    { label: "Debian/Ubuntu", value: "debian", },
+  ]}
+>
+<TabItem value="archlinux">
 
-<!-- ArchLinux -->
 ```bash
 pacman -S --needed cmake gcc mesa ninja pulseaudio sdl2
 ```
 
-<!-- Debian/Ubuntu -->
+</TabItem>
+<TabItem value="debian">
+
 ```bash
 apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja-build pkg-config pulseaudio
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 2. **Optional:** Download FMOD Studio API, extract it, and point
    `tools/fmod-import-tool.sh` at the directory you extracted it to. This should
@@ -126,7 +154,8 @@ apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja
 
 You'll find an overview of configuration and feature flags further below.
 
-## Building for Android
+</TabItem>
+<TabItem value="android">
 
 1. Install [Android Studio](https://developer.android.com/studio/).
 2. Install [CMake](https://cmake.org/).
@@ -139,7 +168,8 @@ You'll find an overview of configuration and feature flags further below.
 > If you get an error about selecting Android SDK, open File menu and select
 > "Sync Project with Gradle Files".
 
-## Building for iOS
+</TabItem>
+<TabItem value="ios">
 
 1. Install [Xcode](https://apps.apple.com/app/xcode/id497799835?mt=12) from App Store.
 2. After Xcode is installed, launch it once to install Command Line Tools.
@@ -147,6 +177,9 @@ You'll find an overview of configuration and feature flags further below.
 4. Install CMake: `brew install cmake`
 5. Open `build/ios/Rainbow.xcodeproj` in Xcode.
 6. Build and run the current scheme.
+
+</TabItem>
+</Tabs>
 
 ## Build Configuration
 

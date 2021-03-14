@@ -62,8 +62,9 @@ whether both `Ctrl` and `⇧ Shift` is pressed, perform a bitwise OR of the two
 buttons and check for equality:
 
 ```cpp
-if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
+if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl)) {
   LOGI("Ctrl+Shift is currently pressed");
+}
 ```
 
 ### Handling Mouse/Touch Events

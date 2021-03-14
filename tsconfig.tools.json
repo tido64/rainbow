@@ -1,7 +1,7 @@
 {
   "extends": "./js/tsconfig",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "noEmit": true,
     "allowJs": true,
     "checkJs": true

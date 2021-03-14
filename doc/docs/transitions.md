@@ -20,7 +20,7 @@ transition. Which definitions they must implement will be specified.
 
 A colourable component must implement methods for getting and setting colour.
 
-```c++
+```cpp
 auto Colorable::color() const -> Color;
 void Colorable::color(Color);
 ```
@@ -30,7 +30,7 @@ void Colorable::color(Color);
 A rotatable component must implement a method for rotating it relative to its
 current angle. The value passed is in radians.
 
-```c++
+```cpp
 void Rotatable::rotate(float);
 ```
 
@@ -39,7 +39,7 @@ void Rotatable::rotate(float);
 A scalable component must implement methods for getting and setting the
 component's current scale factors individually on each axis.
 
-```c++
+```cpp
 auto Scalable::scale() const -> Vec2f;
 void Scalable::scale(Vec2f);
 ```
@@ -49,14 +49,14 @@ void Scalable::scale(Vec2f);
 A translatable component must implement a method for retrieving the component's
 current position, and one for moving it relatively to its current position.
 
-```c++
+```cpp
 auto Translatable::position() const -> Vec2f;
 void Translatable::move(Vec2f);
 ```
 
 ### Fade Transition
 
-```c++
+```cpp
 template <typename T>
 auto rainbow::fade(T component,
                    int opacity,
@@ -78,7 +78,7 @@ Components must be [colourable](#colourable).
 
 ### Move Transition
 
-```c++
+```cpp
 template <typename T>
 auto rainbow::move(T component,
                    Vec2f destination,
@@ -92,7 +92,7 @@ Components must be [translatable](#translatable).
 
 ### Rotate Transition
 
-```c++
+```cpp
 template <typename T>
 auto rainbow::rotate(T component,
                      float angle,
@@ -106,7 +106,7 @@ Components must be [rotatable](#rotatable).
 
 ### Scale Transition
 
-```c++
+```cpp
 template <typename T>
 auto rainbow::scale(T component,
                     float factor,
@@ -158,7 +158,7 @@ To see how each of these behave visually, see [Easing Functions Cheat Sheet].
 
 ## Example
 
-```c++
+```cpp
 #include "Graphics/SpriteBatch.h"
 #include "Script/GameBase.h"
 #include "Script/Transition.h"
