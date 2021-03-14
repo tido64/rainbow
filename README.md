@@ -49,7 +49,10 @@ const label = new Rainbow.Label()
   .alignment(Rainbow.TextAlignment.Center)
   .font("OpenSans-Light.ttf")
   .fontSize(60)
-  .position({ x: screenWidth * 0.5, y: screenHeight * 0.55 })
+  .position({
+    x: screenWidth * 0.5,
+    y: screenHeight * 0.55
+  })
   .text("Hello\nWorld");
 
 Rainbow.RenderQueue.add(label);
@@ -66,7 +69,10 @@ const batch = new Rainbow.SpriteBatch(1);
 batch.setTexture(texture);
 
 const sprite = batch.createSprite(104, 149);
-sprite.position({ x: screenWidth * 0.5, y: screenHeight * 0.5 });
+sprite.position({
+  x: screenWidth * 0.5,
+  y: screenHeight * 0.5,
+});
 
 const frames = [
   { left: 400, bottom: 724, width: 104, height: 149 },

@@ -3,6 +3,9 @@ id: sprite-sheet-animations
 title: Sprite Sheet Animations
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 A sprite sheet animation is a frame-based animation (like traditional animation)
 where we take a sprite and change its texture at set interval.
 
@@ -10,14 +13,23 @@ where we take a sprite and change its texture at set interval.
 
 ### Creating Sprite Sheet Animations
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 Rainbow.Animation(sprite: Sprite, frames: Rect[], fps: number, delay: number)
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 Animation(const SpriteRef& sprite,
           std::unique_ptr<Rect[]> frames,
@@ -25,7 +37,8 @@ Animation(const SpriteRef& sprite,
           int delay = 0);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 `frames` is an array of texture areas that are played back in succession. In
 C++, the array must be terminated with `Animation::end_frame()`. The playback
@@ -43,22 +56,32 @@ possible to cache them for later use.
 
 ### Starting and Stopping Animations
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function start(): void;
 function stop(): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 auto Animation::is_stopped() const -> bool;
 void Animation::start();
 void Animation::stop();
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 An animation will always start from the beginning. There is no pause function
 because animations live in the render queue and can therefore be paused by
@@ -66,118 +89,188 @@ disabling the render unit itself.
 
 ### Navigating the Animation
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function currentFrame(): number;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 auto current_frame() const -> unsigned int;
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Returns the currently displayed frame; **-1** if none.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function frameRate(): number;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 auto frame_rate() const -> unsigned int;
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Returns the frame rate in frames per second.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function jumpTo(frame: number): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::jump_to(unsigned int frame);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Jumps to the specified frame.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function rewind(): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::rewind();
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Rewinds the animation. Equivalent to `jump_to(0)`.
 
 ### Modifying the Animation Sequence
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function setDelay(delay: number): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::set_delay(int delay);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function setFrameRate(fps: number): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::set_frame_rate(unsigned int fps);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Sets the frame rate in frames per second.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function setFrames(frames: Rect[]): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::set_frames(std::unique_ptr<Rect[]> frames);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Sets new frames to be played.
 
@@ -195,19 +288,29 @@ auto sprite() const -> SpriteRef;
 
 Returns the target sprite.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function setSprite(sprite: Sprite): void;
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::set_sprite(const SpriteRef&);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Sets the sprite to animate.
 
@@ -224,9 +327,16 @@ There are three events that are fired during an animation's lifetime.
 
 You can subscribe to these events using:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 function setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
 
@@ -250,7 +360,9 @@ function setCallback(callback: (animation: Animation, event: AnimationEvent) => 
 }
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void Animation::set_callback(Animation::Callback);
 
@@ -260,15 +372,23 @@ void Animation::set_callback(Animation::Callback);
 // triggered `event`.
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ## Example
 
 In this example, we set up a walking animation.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 /// <reference path="./index.d.ts" />
 
@@ -315,7 +435,9 @@ function init(width: number, height: number) {
 function update(dt: number) {}
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 #include "Graphics/Animation.h"
 #include "Graphics/SpriteBatch.h"
@@ -401,7 +523,8 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 Output:
 

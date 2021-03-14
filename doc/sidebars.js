@@ -1,14 +1,14 @@
-{
-  "docs": {
+module.exports = {
+  leftSidebar: {
     "Getting Started": ["getting-started", "basics"],
-    "Components": [
+    Components: [
       "audio",
       "input",
       "sprite-sheet-animations",
       "math",
       "timers",
-      "transitions"
+      "transitions",
     ],
-    "Contributing": ["coding-standard"]
-  }
-}
+    Contributing: ["coding-standard"],
+  },
+};

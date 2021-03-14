@@ -3,6 +3,9 @@ id: basics
 title: Basics
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 ## File Structure
 
 * config.ini (optional)
@@ -41,9 +44,16 @@ Accelerometer = false
 
 ## Entry Point
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 // 'index.js' must implement the following two entry-point functions:
 
@@ -59,7 +69,9 @@ function update(dt) {
 // onto the screen.
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 // Any class that derives from `GameBase` is a potential entry point. The class
 // may also override any or none of the methods `init_impl()` and
@@ -98,16 +110,24 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 // add sprites to the screen in the following sections.
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 ## Sprite Batches
 
 One of Rainbow's philosophies is to always batch sprites. So in order to create
 a sprite, one must first create a batch.
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
 // Ensure our objects are alive while being used.
 let batch, texture;
@@ -119,7 +139,9 @@ function init(screenWidth, screenHeight)
   batch = new Rainbow.SpriteBatch(count);
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
@@ -128,14 +150,22 @@ void MyGame::init_impl(const Vec2i& screen)
   batch_ = std::make_unique<SpriteBatch>(count);
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 `count` tells Rainbow that we intend to create a batch of two sprites. Next,
 we'll create two sprites:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
   const sprite1 = batch.createSprite(72, 97);
   const sprite2 = batch.createSprite(72, 97);
@@ -147,7 +177,9 @@ we'll create two sprites:
   sprite2.position({ x: cx + 50, y: cy });
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
   auto sprite1 = batch_->create_sprite(72, 97);
   auto sprite2 = batch_->create_sprite(72, 97);
@@ -159,16 +191,24 @@ we'll create two sprites:
   sprite2->position({cx + 50, cy});
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 The order in which sprites are created are important as it determines the draw
 order. Here, `sprite1` is drawn first, followed by `sprite2`.
 
 Now we have a sprite batch containing two untextured sprites. Let's add texture:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
   // Load the texture.
   texture = new Rainbow.Texture("p1_spritesheet.png");
@@ -180,7 +220,9 @@ Now we have a sprite batch containing two untextured sprites. Let's add texture:
   sprite2.texture(texture_area);
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
   // Load the texture.
   texture_ = texture_provider().get("p1_spritesheet.png");
@@ -191,7 +233,8 @@ Now we have a sprite batch containing two untextured sprites. Let's add texture:
   sprite2->texture({0, 98, 72, 97});
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 First, we load the image to be used as texture, and assign it to the sprite
 batch. The assigned texture will be used on all sprites within a batch. We then
@@ -210,16 +253,25 @@ render queue. The render queue determines the order in which objects are drawn.
 
 Now we'll add the batch we created earlier:
 
-<!--DOCUSAURUS_CODE_TABS-->
+<Tabs
+  groupId="programming-language"
+  defaultValue="ts"
+  values={[
+    { label: "TypeScript", value: "ts", },
+    { label: "C++", value: "cpp", },
+  ]}
+>
+<TabItem value="ts">
 
-<!-- TypeScript -->
 ```typescript
   // Add batch to the render queue.
   Rainbow.RenderQueue.add(batch);
 }
 ```
 
-<!-- C++ -->
+</TabItem>
+<TabItem value="cpp">
+
 ```cpp
   // Add batch to the render queue. Note that the render queue is only
   // accessible from the entry point. If you need it elsewhere, you must pass
@@ -228,7 +280,8 @@ Now we'll add the batch we created earlier:
 }
 ```
 
-<!--END_DOCUSAURUS_CODE_TABS-->
+</TabItem>
+</Tabs>
 
 If you compile and run this code, you should see two identical sprites next to
 each other at the center of the screen.

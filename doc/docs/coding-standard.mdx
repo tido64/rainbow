@@ -75,7 +75,7 @@ All header files must have `#define` guards. The format of the macro should be
 the full path of the file starting from `src/`. E.g. the file
 `src/Common/impl/DataMap_Unix.h` should have the following guard:
 
-```c++
+```cpp
 #ifndef COMMON_IMPL_DATAMAP_UNIX_H_
 #define COMMON_IMPL_DATAMAP_UNIX_H_
 …
@@ -93,9 +93,9 @@ Within each section, order the includes alphabetically. The paths to Rainbow's
 header files must always be descendants of `src/`. Don't use relative paths, or
 paths with `.` or `..`.
 
-For example, see `src/FileSystem/FileSystem.cpp`:
+For example:
 
-```c++
+```cpp title="src/FileSystem/FileSystem.cpp"
 #include "FileSystem/FileSystem.h"
 
 #include <filesystem>

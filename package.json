@@ -31,6 +31,7 @@
   "scripts": {
     "build": "tsc --project js",
     "build:ci": "npm-run-all build check:tools",
+    "build:doc": "yarn workspace @rainbow/doc run build",
     "check:tools": "tsc --build tsconfig.tools.json && yarn lint:tools",
     "format:c": "clang-format -i -- $(git ls-files 'src/*.cpp' 'src/*.h' 'src/*.m' 'src/*.mm' ':!:src/*.g.h' ':!:src/*/libpng/config.h')",
     "format:js": "prettier --no-config --write $(git ls-files -- '*.js*' ':!:*.vscode/*' ':!:*xcassets/*')",
