@@ -149,6 +149,10 @@ jobs:
       ANDROID_CMAKE_VERSION: 3.10.2.4988404
       ANDROID_SDK_TOOLS_VERSION: 4333796
     steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -165,7 +169,8 @@ jobs:
       env:
         TERM: dumb
       run: |
-        gradle build
+        gradle wrapper --gradle-version 6.8.3
+        ./gradlew build
       working-directory: build/android
   iOS:
     runs-on: macos-latest
