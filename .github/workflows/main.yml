@@ -28,21 +28,21 @@ jobs:
       #   [  FAILED  ] StableArrayTest.IteratorsAreStableAfterSwaps
       CONFIGURATION: ${{ matrix.configuration }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        cmake -DCMAKE_SYSTEM_VERSION=$WINDOWS_10_SDK -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
-        cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
-      shell: bash
-      working-directory: build/windows
-    - name: Test
-      run: |
-        $CONFIGURATION/rainbow.exe --test --gtest_filter=-AudioTest* --gtest_output=xml:test-report.xml
-      shell: bash
-      working-directory: build/windows
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          cmake -DCMAKE_SYSTEM_VERSION=$WINDOWS_10_SDK -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
+          cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
+        shell: bash
+        working-directory: build/windows
+      - name: Test
+        run: |
+          $CONFIGURATION/rainbow.exe --test --gtest_filter=-AudioTest* --gtest_output=xml:test-report.xml
+        shell: bash
+        working-directory: build/windows
   Windows-publish:
     name: Windows (publish)
     runs-on: windows-latest
@@ -51,32 +51,32 @@ jobs:
       CONFIGURATION: MinSizeRel
     if: github.event_name == 'push'
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        cmake -DCMAKE_SYSTEM_VERSION=$WINDOWS_10_SDK -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
-        cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
-      shell: bash
-      working-directory: build/windows
-    - name: Stage artifact
-      run: |
-        mkdir $ARTIFACT_NAME
-        cp build/windows/$CONFIGURATION/rainbow.exe $ARTIFACT_NAME
-        cp build/windows/*.dll $ARTIFACT_NAME
-        cp LICENSE $ARTIFACT_NAME
-        cp THIRDPARTY $ARTIFACT_NAME
-        cp js/* $ARTIFACT_NAME
-        mkdir artifact
-        mv $ARTIFACT_NAME artifact/
-      shell: bash
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: rainbow-1.0.0+${{ github.run_number }}.${{ github.sha }}
-        path: artifact
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          cmake -DCMAKE_SYSTEM_VERSION=$WINDOWS_10_SDK -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
+          cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
+        shell: bash
+        working-directory: build/windows
+      - name: Stage artifact
+        run: |
+          mkdir $ARTIFACT_NAME
+          cp build/windows/$CONFIGURATION/rainbow.exe $ARTIFACT_NAME
+          cp build/windows/*.dll $ARTIFACT_NAME
+          cp LICENSE $ARTIFACT_NAME
+          cp THIRDPARTY $ARTIFACT_NAME
+          cp js/* $ARTIFACT_NAME
+          mkdir artifact
+          mv $ARTIFACT_NAME artifact/
+        shell: bash
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: rainbow-1.0.0+${{ github.run_number }}.${{ github.sha }}
+          path: artifact
   macOS:
     strategy:
       matrix:
@@ -86,23 +86,23 @@ jobs:
       # RelWithDebInfo breaks ScopeStackTest.CallsDestructorsInReverseOrder
       CONFIGURATION: ${{ matrix.configuration }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Install dependencies
-      run: |
-        brew bundle
-    - name: Build
-      run: |
-        mkdir -p build/macos
-        cd build/macos
-        cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
-        ninja
-    - name: Test
-      run: |
-        ./rainbow --gtest_filter=-AudioTest* --gtest_output="xml:test-report.xml"
-      working-directory: build/macos
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install dependencies
+        run: |
+          brew bundle
+      - name: Build
+        run: |
+          mkdir -p build/macos
+          cd build/macos
+          cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
+          ninja
+      - name: Test
+        run: |
+          ./rainbow --gtest_filter=-AudioTest* --gtest_output="xml:test-report.xml"
+        working-directory: build/macos
   Linux:
     strategy:
       matrix:
@@ -114,116 +114,116 @@ jobs:
       GCOV: gcov-7
       CONFIGURATION: ${{ matrix.configuration }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes $CC $CXX lcov libpulse-dev libsdl2-dev ninja-build pulseaudio
-    - name: Build
-      run: |
-        mkdir -p build/linux
-        cd build/linux
-        cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
-        ninja
-    - name: Test
-      run: |
-        ./rainbow --gtest_output="xml:test-report.xml"
-      working-directory: build/linux
-    - name: Upload test coverage
-      if: ${{ matrix.configuration == 'MinSizeRel' }}
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        PATH: /usr/local/bin:/usr/bin:/bin
-      run: |
-        lcov --quiet --capture --output-file coverage.info --directory . --base-directory . --gcov-tool $GCOV
-        lcov --quiet --remove coverage.info '/usr/*' '*/lib/*' --output-file coverage.info
-        lcov --list coverage.info
-        bash <(curl -s https://codecov.io/bash) -f coverage.info -t $CODECOV_TOKEN -K
-      working-directory: build/linux
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes $CC $CXX lcov libpulse-dev libsdl2-dev ninja-build pulseaudio
+      - name: Build
+        run: |
+          mkdir -p build/linux
+          cd build/linux
+          cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
+          ninja
+      - name: Test
+        run: |
+          ./rainbow --gtest_output="xml:test-report.xml"
+        working-directory: build/linux
+      - name: Upload test coverage
+        if: ${{ matrix.configuration == 'MinSizeRel' }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          PATH: /usr/local/bin:/usr/bin:/bin
+        run: |
+          lcov --quiet --capture --output-file coverage.info --directory . --base-directory . --gcov-tool $GCOV
+          lcov --quiet --remove coverage.info '/usr/*' '*/lib/*' --output-file coverage.info
+          lcov --list coverage.info
+          bash <(curl -s https://codecov.io/bash) -f coverage.info -t $CODECOV_TOKEN -K
+        working-directory: build/linux
   Android:
     runs-on: ubuntu-latest
     env:
       ANDROID_CMAKE_VERSION: 3.10.2.4988404
       ANDROID_SDK_TOOLS_VERSION: 4333796
     steps:
-    - name: Set up JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Download Android command line tools
-      run: |
-        curl -O https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip
-        sudo unzip -oqq sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip -d $ANDROID_HOME
-        sudo chmod +x $ANDROID_HOME/tools/bin/sdkmanager
-    - name: Install dependencies
-      run: |
-        $ANDROID_HOME/tools/bin/sdkmanager "cmake;$ANDROID_CMAKE_VERSION"
-    - name: Build
-      env:
-        TERM: dumb
-      run: |
-        gradle wrapper --gradle-version 6.8.3
-        ./gradlew build
-      working-directory: build/android
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Download Android command line tools
+        run: |
+          curl -O https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip
+          sudo unzip -oqq sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip -d $ANDROID_HOME
+          sudo chmod +x $ANDROID_HOME/tools/bin/sdkmanager
+      - name: Install dependencies
+        run: |
+          $ANDROID_HOME/tools/bin/sdkmanager "cmake;$ANDROID_CMAKE_VERSION"
+      - name: Build
+        env:
+          TERM: dumb
+        run: |
+          gradle wrapper --gradle-version 6.8.3
+          ./gradlew build
+        working-directory: build/android
   iOS:
     runs-on: macos-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Build
-      run: |
-        set -o pipefail
-        xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
   Emscripten:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Checkout Emscripten SDK
-      uses: actions/checkout@v2
-      with:
-        repository: 'emscripten-core/emsdk'
-        path: '.emsdk'
-    - name: Build
-      run: |
-        set -o pipefail
-        cd .emsdk
-        ./emsdk install $EMSCRIPTEN_SDK
-        ./emsdk activate $EMSCRIPTEN_SDK
-        source ./emsdk_env.sh
-        cd ..
-        mkdir -p build/js
-        cd build/js
-        ../../tools/build.sh emscripten
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Checkout Emscripten SDK
+        uses: actions/checkout@v2
+        with:
+          repository: "emscripten-core/emsdk"
+          path: ".emsdk"
+      - name: Build
+        run: |
+          set -o pipefail
+          cd .emsdk
+          ./emsdk install $EMSCRIPTEN_SDK
+          ./emsdk activate $EMSCRIPTEN_SDK
+          source ./emsdk_env.sh
+          cd ..
+          mkdir -p build/js
+          cd build/js
+          ../../tools/build.sh emscripten
   Node:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Cache /node_modules
-      uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: rainbow-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-    - name: Build
-      run: |
-        yarn --frozen-lockfile --non-interactive
-        yarn build:ci
-    - name: Build documentation
-      run: |
-        yarn build:doc
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache /node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: rainbow-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: Build
+        run: |
+          yarn --frozen-lockfile --non-interactive
+          yarn build:ci
+      - name: Build documentation
+        run: |
+          yarn build:doc
