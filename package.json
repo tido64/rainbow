@@ -34,7 +34,7 @@
     "build:doc": "yarn workspace @rainbow/doc run build",
     "check:tools": "tsc --build tsconfig.tools.json && yarn lint:tools",
     "format:c": "clang-format -i -- $(git ls-files 'src/*.cpp' 'src/*.h' 'src/*.m' 'src/*.mm' ':!:src/*.g.h' ':!:src/*/libpng/config.h')",
-    "format:js": "prettier --no-config --write $(git ls-files -- '*.js*' ':!:*.vscode/*' ':!:*xcassets/*')",
+    "format:js": "prettier --no-config --write $(git ls-files -- '*.js*' ':!:*.vscode/*' ':!:*xcassets/*' ':!:src/Tests/__fixtures/JSModuleTest_LoadsModules/module.js')",
     "generate:bindings": "node tools/generate-bindings.js",
     "generate:shaders": "node tools/generate-shaders.js",
     "import-asset": "node tools/import-asset.js",

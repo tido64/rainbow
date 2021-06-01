@@ -626,10 +626,12 @@ function generateCppBindings(typeInfo) {
   };
 
   /** @type {(sourceName: string) => (value: EnumValueInfo) => string} */
-  const registerEnumValue = (sourceName) => ({ name }) => {
-    return `    duk_push_int(ctx, to_underlying_type(${sourceName}::${name}));
+  const registerEnumValue =
+    (sourceName) =>
+    ({ name }) => {
+      return `    duk_push_int(ctx, to_underlying_type(${sourceName}::${name}));
     duk::put_prop_literal(ctx, obj_idx, "${name}");`;
-  };
+    };
 
   /** @type {(typeInfo: EnumInfo) => string[]} */
   const defineEnum = ({ sourceName, values }) => {
@@ -647,16 +649,18 @@ function generateCppBindings(typeInfo) {
       "template <>",
       `void rainbow::duk::register_module<rainbow::${sourceName}>(duk_context* ctx, duk_idx_t rainbow)`,
       "{",
-      .../** @type {() => string[]} */ (() => {
-        switch (typeInfo.type) {
-          case "class":
-            return defineClass(typeInfo);
-          case "enum":
-            return defineEnum(typeInfo);
-          case "module":
-            return [];
+      .../** @type {() => string[]} */ (
+        () => {
+          switch (typeInfo.type) {
+            case "class":
+              return defineClass(typeInfo);
+            case "enum":
+              return defineEnum(typeInfo);
+            case "module":
+              return [];
+          }
         }
-      })(),
+      )(),
       "    duk_freeze(ctx, -1);",
       `    duk::put_prop_literal(ctx, rainbow, "${typeInfo.name}");`,
       "}",
