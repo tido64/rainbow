@@ -73,7 +73,7 @@ jobs:
           mv $ARTIFACT_NAME artifact/
         shell: bash
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.2.3
         with:
           name: rainbow-1.0.0+${{ github.run_number }}.${{ github.sha }}
           path: artifact
