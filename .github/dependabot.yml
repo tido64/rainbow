@@ -1,29 +1,17 @@
 version: 2
 updates:
-- package-ecosystem: gitsubmodule
-  directory: "/"
-  schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
-  reviewers:
-  - tido64
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
-  reviewers:
-  - tido64
-  versioning-strategy: lockfile-only
-  ignore:
-  - dependency-name: "@types/node"
-    versions:
-    - ">= 11.a, < 12"
-  - dependency-name: "@types/node"
-    versions:
-    - ">= 13.a, < 14"
-  - dependency-name: "@types/node"
-    versions:
-    - ">= 14.a, < 15"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 10
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    versioning-strategy: "lockfile-only"
